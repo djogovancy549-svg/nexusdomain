@@ -686,7 +686,7 @@ export const DomainManagementTable: React.FC<DomainManagementTableProps> = ({
                       className="px-3 py-2 rounded-xl text-xs font-semibold bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 transition flex items-center gap-1.5 cursor-pointer"
                     >
                       <Settings className="w-3.5 h-3.5" />
-                      <span>DNS</span>
+                      <span>DNS / Subdomain</span>
                     </button>
 
                     {/* Hosting cPanel / Webmin */}

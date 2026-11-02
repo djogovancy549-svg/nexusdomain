@@ -409,6 +409,14 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
 
                 <div className="flex flex-wrap items-center gap-2 pt-2">
                   <button
+                    onClick={() => onOpenDnsModal(dom)}
+                    className="px-3 py-1.5 rounded-xl bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer"
+                    title="Buat dan kelola subdomain (admin, app, dll) serta DNS"
+                  >
+                    <Globe className="w-3.5 h-3.5 text-indigo-400" />
+                    <span>Subdomain &amp; DNS</span>
+                  </button>
+                  <button
                     onClick={() => onOpenInvoiceModal(dom)}
                     className="px-3.5 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
                   >
