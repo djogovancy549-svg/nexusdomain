@@ -1,12 +1,13 @@
 import React from 'react';
-import { Check, X, Shield, Zap, Server, PhoneCall, DollarSign, Award, ArrowUpRight } from 'lucide-react';
+import { Check, X, Shield, Zap, PhoneCall, DollarSign, Award, ArrowUpRight, Server, CheckCircle2 } from 'lucide-react';
 import { ADMIN_PHONE } from './PaymentInvoiceModal';
+import cloudBannerImg from '../assets/images/cloud_hosting_hero_banner_1793612563042.jpg';
 
 export const HostingerComparison: React.FC = () => {
   const comparisonItems = [
     {
       feature: 'Kecepatan Server & Latency Akses Indonesia',
-      ebi: 'IIX Jakarta Cloud (< 5ms Latency Super Cepat)',
+      ebi: 'IIX Jakarta Cloud Server (< 5ms Latency Super Cepat)',
       hostinger: 'Server Luar Negeri / Singapore (120ms - 250ms)',
       isEbiWinner: true,
     },
@@ -48,14 +49,33 @@ export const HostingerComparison: React.FC = () => {
       <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none" />
 
+      {/* Top Graphic Showcase Header */}
+      <div className="relative mb-10 rounded-2xl overflow-hidden border border-slate-800/80 shadow-2xl h-48 md:h-64 flex items-center p-6 md:p-8">
+        <img
+          src={cloudBannerImg}
+          alt="CV. EBI Datacenter"
+          className="absolute inset-0 w-full h-full object-cover object-center filter brightness-75 contrast-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent" />
+
+        <div className="relative z-10 max-w-xl space-y-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-xs font-extrabold text-amber-300">
+            <Award className="w-4 h-4 text-amber-400" /> PERBANDINGAN STANDAR INTERNASIONAL
+          </div>
+          <h2 className="text-2xl md:text-3xl font-black text-white leading-tight">
+            Performa Hostinger-Class dengan Latency Lokal IIX Indonesia
+          </h2>
+          <p className="text-xs md:text-sm text-slate-300 font-medium">
+            Infrastruktur Cloud NVMe berkecepatan tinggi dengan jaminan uptime 99.9% dan pengelolaan transparan untuk seluruh pelanggan CV. EBI.
+          </p>
+        </div>
+      </div>
+
       {/* Title Header */}
       <div className="text-center max-w-3xl mx-auto mb-10 space-y-3">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-semibold text-blue-400">
-          <Award className="w-4 h-4 text-blue-400" /> Mengapa Memilih CV. EBI?
-        </div>
-        <h2 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
-          Perbandingan Fitur: <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-300 to-emerald-400">CV. EBI Domain</span> vs Provider Global (Hostinger)
-        </h2>
+        <h3 className="text-xl md:text-2xl font-extrabold text-white tracking-tight">
+          Perbandingan Layanan: <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-300 to-emerald-400">CV. EBI Domain</span> vs Provider Global (Hostinger)
+        </h3>
         <p className="text-sm text-slate-300 leading-relaxed">
           Ketahui mengapa ribuan pelanggan bisnis dan pengembang lokal memilih infrastruktur CV. EBI untuk performa domain dan hosting terbaik di Indonesia.
         </p>
@@ -89,7 +109,7 @@ export const HostingerComparison: React.FC = () => {
           </div>
           <h3 className="font-bold text-white text-base mb-1">Support WhatsApp Personal</h3>
           <p className="text-xs text-slate-300 leading-relaxed">
-            Dilayani langsung oleh tim teknis admin via WhatsApp & Email tanpa antrean bot otomatis yang membingungkan.
+            Dilayani langsung oleh tim teknis admin via WhatsApp &amp; Email tanpa antrean bot otomatis yang membingungkan.
           </p>
         </div>
       </div>
@@ -100,7 +120,7 @@ export const HostingerComparison: React.FC = () => {
           <thead>
             <tr className="border-b border-slate-800 bg-slate-900/80">
               <th className="p-4 md:p-5 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                Fitur & Layanan Domain
+                Fitur &amp; Layanan Domain
               </th>
               <th className="p-4 md:p-5 text-xs font-bold text-emerald-400 uppercase tracking-wider bg-emerald-950/30 border-x border-emerald-900/50">
                 <span className="flex items-center gap-1.5">
