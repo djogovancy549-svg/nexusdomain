@@ -147,14 +147,15 @@ export default function App() {
   const [isCloudflareModalOpen, setIsCloudflareModalOpen] = useState(false);
   const [cfPagesModalDomain, setCfPagesModalDomain] = useState<DomainItem | null>(null);
   const [invoiceModalDomain, setInvoiceModalDomain] = useState<DomainItem | null>(null);
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
-  // Strictly enforce Admin view only for djogovancy549@gmail.com
+  // Strictly enforce Admin view only if authenticated via PIN (domain2026) or Super Admin Google Account
   useEffect(() => {
-    if (isAdminView && currentUser?.email?.toLowerCase() !== SUPER_ADMIN_EMAIL.toLowerCase()) {
+    if (isAdminView && !isAdminAuthenticated && currentUser?.email?.toLowerCase() !== SUPER_ADMIN_EMAIL.toLowerCase()) {
       setIsAdminView(false);
       setActiveTab('client-portal');
     }
-  }, [currentUser, isAdminView]);
+  }, [currentUser, isAdminView, isAdminAuthenticated]);
 
   // Security scan state
   const [isScanning, setIsScanning] = useState(false);
@@ -762,6 +763,7 @@ export default function App() {
         isAdminView={isAdminView}
         onOpenAdminAuthModal={() => setIsAdminAuthModalOpen(true)}
         onLogoutAdmin={() => {
+          setIsAdminAuthenticated(false);
           setIsAdminView(false);
           setActiveTab('client-portal');
           showToast('Anda telah keluar dari Mode Admin', 'info');
@@ -874,6 +876,7 @@ export default function App() {
         currentUser={currentUser}
         onGoogleSignIn={handleGoogleSignIn}
         onSuccess={() => {
+          setIsAdminAuthenticated(true);
           setIsAdminView(true);
           setActiveTab('domains');
           showToast('Mode Admin Aktif! Pengelolaan Status Lunas, DNS & Database Terbuka.', 'success');
