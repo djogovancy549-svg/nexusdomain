@@ -5,6 +5,8 @@ import { DomainSearchHero } from './components/DomainSearchHero';
 import { HostingPackages } from './components/HostingPackages';
 import { DomainManagementTable } from './components/DomainManagementTable';
 import { CustomerDashboard } from './components/CustomerDashboard';
+import { AdminAuthModal, SUPER_ADMIN_EMAIL } from './components/AdminAuthModal';
+import { PaymentInvoiceModal } from './components/PaymentInvoiceModal';
 import { GoogleSheetsModal } from './components/GoogleSheetsModal';
 import { DnsManagerModal } from './components/DnsManagerModal';
 import { HostingCPanelModal } from './components/HostingCPanelModal';
@@ -136,6 +138,7 @@ export default function App() {
   const [registerInitialPkg, setRegisterInitialPkg] = useState('business');
 
   const [isSheetsModalOpen, setIsSheetsModalOpen] = useState(false);
+  const [isAdminAuthModalOpen, setIsAdminAuthModalOpen] = useState(false);
   const [dnsModalDomain, setDnsModalDomain] = useState<DomainItem | null>(null);
   const [hostingModalDomain, setHostingModalDomain] = useState<DomainItem | null>(null);
   const [renewModalDomain, setRenewModalDomain] = useState<DomainItem | null>(null);
@@ -143,6 +146,15 @@ export default function App() {
   const [readinessModalDomain, setReadinessModalDomain] = useState<DomainItem | null>(null);
   const [isCloudflareModalOpen, setIsCloudflareModalOpen] = useState(false);
   const [cfPagesModalDomain, setCfPagesModalDomain] = useState<DomainItem | null>(null);
+  const [invoiceModalDomain, setInvoiceModalDomain] = useState<DomainItem | null>(null);
+
+  // Strictly enforce Admin view only for djogovancy549@gmail.com
+  useEffect(() => {
+    if (isAdminView && currentUser?.email?.toLowerCase() !== SUPER_ADMIN_EMAIL.toLowerCase()) {
+      setIsAdminView(false);
+      setActiveTab('client-portal');
+    }
+  }, [currentUser, isAdminView]);
 
   // Security scan state
   const [isScanning, setIsScanning] = useState(false);
@@ -382,6 +394,10 @@ export default function App() {
       `Domain ${newDomain.name} berhasil didaftarkan! Batas waktu: ${newDomain.expirationDate}`,
       'success'
     );
+
+    if (!isAdminView) {
+      setInvoiceModalDomain(newDomain);
+    }
 
     // If autoSync is enabled, push to Google Sheets immediately
     if (sheetsConfig.autoSync) {
@@ -744,7 +760,12 @@ export default function App() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         isAdminView={isAdminView}
-        setIsAdminView={setIsAdminView}
+        onOpenAdminAuthModal={() => setIsAdminAuthModalOpen(true)}
+        onLogoutAdmin={() => {
+          setIsAdminView(false);
+          setActiveTab('client-portal');
+          showToast('Anda telah keluar dari Mode Admin', 'info');
+        }}
         currentUser={currentUser}
         sheetsConfig={sheetsConfig}
         webhookConfig={webhookConfig}
@@ -772,6 +793,7 @@ export default function App() {
             onOpenRenewModal={(d) => setRenewModalDomain(d)}
             onOpenCertModal={(d) => setCertModalDomain(d)}
             onOpenCfPagesModal={(d) => setCfPagesModalDomain(d)}
+            onOpenInvoiceModal={(d) => setInvoiceModalDomain(d)}
           />
         )}
 
@@ -779,6 +801,7 @@ export default function App() {
           <DomainManagementTable
             domains={domains}
             currency={currency}
+            isAdminView={isAdminView}
             onOpenDnsModal={(d) => setDnsModalDomain(d)}
             onOpenHostingModal={(d) => setHostingModalDomain(d)}
             onOpenRenewModal={(d) => setRenewModalDomain(d)}
@@ -845,6 +868,18 @@ export default function App() {
       </footer>
 
       {/* Modals */}
+      <AdminAuthModal
+        isOpen={isAdminAuthModalOpen}
+        onClose={() => setIsAdminAuthModalOpen(false)}
+        currentUser={currentUser}
+        onGoogleSignIn={handleGoogleSignIn}
+        onSuccess={() => {
+          setIsAdminView(true);
+          setActiveTab('domains');
+          showToast('Mode Admin Aktif! Pengelolaan Status Lunas, DNS & Database Terbuka.', 'success');
+        }}
+      />
+
       <RegisterDomainModal
         isOpen={isRegisterModalOpen}
         onClose={() => setIsRegisterModalOpen(false)}
@@ -852,6 +887,7 @@ export default function App() {
         initialDomainName={registerInitialDomain}
         initialTld={registerInitialTld}
         initialPackageId={registerInitialPkg}
+        isAdminView={isAdminView}
         onRegisterDomain={handleRegisterDomain}
       />
 
@@ -945,6 +981,14 @@ export default function App() {
         isOpen={Boolean(cfPagesModalDomain)}
         onClose={() => setCfPagesModalDomain(null)}
         onApplyPagesDns={handleApplyPagesDns}
+      />
+
+      <PaymentInvoiceModal
+        domain={invoiceModalDomain}
+        isOpen={Boolean(invoiceModalDomain)}
+        onClose={() => setInvoiceModalDomain(null)}
+        currency={currency}
+        showToast={showToast}
       />
     </div>
   );

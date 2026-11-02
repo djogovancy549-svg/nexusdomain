@@ -15,6 +15,9 @@ import {
   DollarSign,
   Calendar,
   Sparkles,
+  Building2,
+  Settings,
+  HelpCircle,
 } from 'lucide-react';
 import { DomainItem, TldPricing } from '../types';
 
@@ -28,6 +31,7 @@ interface CustomerDashboardProps {
   onOpenRenewModal: (domain: DomainItem) => void;
   onOpenCertModal: (domain: DomainItem) => void;
   onOpenCfPagesModal: (domain: DomainItem) => void;
+  onOpenInvoiceModal: (domain: DomainItem) => void;
 }
 
 export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
@@ -40,6 +44,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
   onOpenRenewModal,
   onOpenCertModal,
   onOpenCfPagesModal,
+  onOpenInvoiceModal,
 }) => {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('annual');
   const [activeSubTab, setActiveSubTab] = useState<'domains' | 'billing' | 'security'>('domains');
@@ -47,7 +52,6 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
   // Format currency
   const formatMoney = (idrAmount: number, usdAmount: number) => {
     if (currency === 'USD') {
-      // If monthly, divide annual by 12 or use monthly proportion
       const amount = billingCycle === 'monthly' ? usdAmount / 10 : usdAmount;
       return `$${amount.toFixed(2)}/${billingCycle === 'monthly' ? 'bln' : 'thn'}`;
     }
@@ -75,7 +79,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
               Selamat Datang di Dashboard Pelanggan
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
-              Kelola seluruh domain, paket hosting, perpanjangan tagihan (bulanan/tahunan), sertifikat SSL, dan perlindungan DNSSEC dalam satu kendali terpusat yang aman setara Hostinger &amp; RumahWeb.
+              Layanan managed domain &amp; cloud hosting profesional oleh Tim CV EBI. Transfer pembayaran ke Bank BRI resmi dan tim Admin kami yang akan mengonfigurasi DNS &amp; SSL secara profesional.
             </p>
           </div>
 
@@ -91,6 +95,22 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
         </div>
       </div>
 
+      {/* Keunggulan CV EBI vs Hostinger Box */}
+      <div className="p-5 rounded-2xl bg-gradient-to-r from-indigo-950/50 via-slate-900 to-indigo-950/50 border border-indigo-500/20 space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 font-bold text-white text-sm">
+            <ShieldCheck className="w-5 h-5 text-indigo-400" />
+            <span>Pemberitahuan Layanan Managed Domain CV EBI (Beda dengan Hostinger)</span>
+          </div>
+          <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            AMAN &amp; TERJAMIN
+          </span>
+        </div>
+        <p className="text-xs text-slate-300 leading-relaxed">
+          Di Hostinger, pelanggan dibebaskan mengatur DNS sendiri yang sering kali menyebabkan salah pengetikan dan website down. Di <strong>CV EBI</strong>, demi keamanan pelanggan, <strong>Tim Admin (`djogovancy549@gmail.com`) membantu mengonfigurasi DNS, Cloudflare, dan SSL secara gratis setelah pembayaran transfer BRI terverifikasi</strong>. Pelanggan juga dapat memilih mode Pengaturan Mandiri jika ingin mengatur DNS sendiri.
+        </p>
+      </div>
+
       {/* Quick Metrics Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-lg space-y-2">
@@ -101,7 +121,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
           <div className="text-3xl font-extrabold text-white">{activeDomainsCount}</div>
           <p className="text-xs text-emerald-400 flex items-center gap-1">
             <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>Semua berjalan normal</span>
+            <span>Semua terkelola aman</span>
           </p>
         </div>
 
@@ -113,26 +133,23 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
           <div className="text-3xl font-extrabold text-white">{sslActiveCount}</div>
           <p className="text-xs text-emerald-400 flex items-center gap-1">
             <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>HTTPS Gembok Hijau Aktif</span>
+            <span>Enkripsi HTTPS Aktif</span>
           </p>
         </div>
 
         <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-lg space-y-2">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-bold uppercase tracking-wider">DNSSEC Security</span>
-            <ShieldCheck className="w-5 h-5 text-cyan-400" />
+            <span className="text-xs font-bold uppercase tracking-wider">Rekening Transfer BRI</span>
+            <Building2 className="w-5 h-5 text-amber-400" />
           </div>
-          <div className="text-3xl font-extrabold text-white">{dnssecCount}</div>
-          <p className="text-xs text-cyan-400 flex items-center gap-1">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>Dilindungi Tanda Tangan ECDSA</span>
-          </p>
+          <div className="text-xs font-mono font-bold text-amber-300">4625-01-020206-53-7</div>
+          <p className="text-[11px] text-slate-400 truncate">a.n. Yanti Yesinta Nenu D.W Nggodji</p>
         </div>
 
         <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-lg space-y-2">
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-xs font-bold uppercase tracking-wider">Siklus Penagihan</span>
-            <CreditCard className="w-5 h-5 text-amber-400" />
+            <CreditCard className="w-5 h-5 text-indigo-400" />
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -153,12 +170,9 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
                   : 'bg-slate-800 text-slate-400 hover:text-white'
               }`}
             >
-              Tahunan (Hemat)
+              Tahunan
             </button>
           </div>
-          <p className="text-[11px] text-slate-400">
-            {billingCycle === 'monthly' ? 'Fleksibel bayar per bulan' : 'Diskon hemat hingga 25%'}
-          </p>
         </div>
       </div>
 
@@ -185,7 +199,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
           }`}
         >
           <CreditCard className="w-4 h-4" />
-          <span>Katalog Harga &amp; Tagihan</span>
+          <span>Katalog Harga &amp; Transfer BRI</span>
         </button>
 
         <button
@@ -197,7 +211,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
           }`}
         >
           <ShieldCheck className="w-4 h-4" />
-          <span>Perlindungan Keamanan Klien</span>
+          <span>Proteksi Managed Domain</span>
         </button>
       </div>
 
@@ -219,8 +233,14 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <span className="text-lg font-extrabold text-white tracking-wide">{dom.name}</span>
-                      <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 text-[11px] font-bold border border-emerald-500/20">
-                        {dom.status.toUpperCase()}
+                      <span
+                        className={`px-2.5 py-0.5 rounded-md text-[11px] font-bold border ${
+                          dom.paymentStatus === 'paid'
+                            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                            : 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                        }`}
+                      >
+                        {dom.paymentStatus === 'paid' ? '✓ LUNAS' : '⏳ MENUNGGU PEMBAYARAN'}
                       </span>
                     </div>
                     <p className="text-xs text-slate-400">Hosting: {dom.hostingPlan}</p>
@@ -250,18 +270,11 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
 
                 <div className="flex flex-wrap items-center gap-2 pt-2">
                   <button
-                    onClick={() => onOpenDnsModal(dom)}
-                    className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer"
+                    onClick={() => onOpenInvoiceModal(dom)}
+                    className="px-3.5 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
                   >
-                    <Server className="w-3.5 h-3.5 text-indigo-400" />
-                    <span>DNS Manager</span>
-                  </button>
-                  <button
-                    onClick={() => onOpenCfPagesModal(dom)}
-                    className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <Globe className="w-3.5 h-3.5 text-cyan-400" />
-                    <span>Cloudflare Pages</span>
+                    <CreditCard className="w-3.5 h-3.5" />
+                    <span>Faktur &amp; Transfer BRI</span>
                   </button>
                   <button
                     onClick={() => onOpenCertModal(dom)}
@@ -289,9 +302,9 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h3 className="text-lg font-bold text-white">Katalog Harga Domain &amp; Siklus Penagihan</h3>
+              <h3 className="text-lg font-bold text-white">Katalog Harga Domain &amp; Rekening BRI</h3>
               <p className="text-xs text-slate-400 mt-1">
-                Pilih siklus pembayaran fleksibel (Bulanan / Tahunan) untuk setiap ekstensi domain populer.
+                Lakukan transfer ke Bank BRI: <strong>4625-01-020206-53-7</strong> (a.n. Yanti Yesinta Nenu D.W Nggodji)
               </p>
             </div>
             <div className="flex items-center gap-2 bg-slate-900 border border-slate-800 p-1.5 rounded-xl">
@@ -309,7 +322,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
                   billingCycle === 'annual' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
                 }`}
               >
-                Tagihan Per Tahun (Hemat)
+                Tagihan Per Tahun
               </button>
             </div>
           </div>
@@ -331,9 +344,6 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
                     <span className="text-xs text-slate-400">Harga Langganan ({billingCycle === 'monthly' ? 'Bulanan' : 'Tahunan'})</span>
                     <div className="text-2xl font-extrabold text-amber-400 font-mono">
                       {formatMoney(item.promoPriceIDR, item.promoPriceUSD)}
-                    </div>
-                    <div className="text-xs text-slate-500 line-through">
-                      Normal: {formatMoney(item.normalPriceIDR, item.normalPriceUSD)}
                     </div>
                   </div>
                 </div>
@@ -358,9 +368,9 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
       {activeSubTab === 'security' && (
         <div className="space-y-6">
           <div>
-            <h3 className="text-lg font-bold text-white">Standar Keamanan Klien (Bersaing dengan Hostinger &amp; RumahWeb)</h3>
+            <h3 className="text-lg font-bold text-white">Standar Keamanan Managed CV EBI</h3>
             <p className="text-xs text-slate-400 mt-1">
-              Setiap domain yang dikelola di EbiDomain dilindungi dengan enkripsi berlapis dan proteksi data mutakhir.
+              Setiap domain yang dikelola dilindungi dengan enkripsi berlapis dan proteksi data oleh Tim Admin (`djogovancy549@gmail.com`).
             </p>
           </div>
 
@@ -371,7 +381,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
               </div>
               <h4 className="text-base font-bold text-white">DNSSEC ECDSA Cryptography</h4>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Melindungi lalu lintas DNS pelanggan dari serangan pembajakan DNS (*DNS Cache Poisoning*) dan pemalsuan rute jaringan.
+                Melindungi lalu lintas DNS pelanggan dari serangan pembajakan DNS (*DNS Cache Poisoning*).
               </p>
             </div>
 
@@ -381,17 +391,17 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
               </div>
               <h4 className="text-base font-bold text-white">WHOIS Privacy Shield</h4>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Menyembunyikan informasi pribadi pemilik domain (nomor telepon &amp; email) dari database publik WHOIS untuk mencegah spam &amp; telemarketing ilegal.
+                Menyembunyikan informasi pribadi pemilik domain dari database publik WHOIS.
               </p>
             </div>
 
             <div className="p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-3">
               <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center">
-                <RefreshCw className="w-6 h-6" />
+                <Building2 className="w-6 h-6" />
               </div>
-              <h4 className="text-base font-bold text-white">Anti-Transfer Lock &amp; EPP</h4>
+              <h4 className="text-base font-bold text-white">Transfer Resmi BRI</h4>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Domain dikunci secara permanen terhadap transfer ilegal (*Registry Lock*), dan hanya dapat ditransfer menggunakan kode EPP rahasia pemilik domain.
+                Pembayaran diverifikasi langsung oleh Admin ke rekening Bank BRI resmi (4625-01-020206-53-7 a.n. Yanti Yesinta Nenu D.W Nggodji).
               </p>
             </div>
           </div>

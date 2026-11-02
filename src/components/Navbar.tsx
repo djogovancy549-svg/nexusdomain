@@ -1,18 +1,17 @@
 import React from 'react';
 import {
   ShieldCheck,
-  FileSpreadsheet,
   Globe,
   Server,
   Lock,
   PlusCircle,
-  RefreshCw,
-  LogOut,
-  ExternalLink,
-  Cloud,
   Sparkles,
   Shield,
   UserCheck,
+  KeyRound,
+  LogOut,
+  FileSpreadsheet,
+  RefreshCw,
 } from 'lucide-react';
 import { User } from 'firebase/auth';
 import { GoogleSheetsConfig } from '../types';
@@ -22,7 +21,8 @@ interface NavbarProps {
   activeTab: 'domains' | 'search' | 'hosting' | 'security' | 'sheets' | 'client-portal';
   setActiveTab: (tab: 'domains' | 'search' | 'hosting' | 'security' | 'sheets' | 'client-portal') => void;
   isAdminView: boolean;
-  setIsAdminView: (val: boolean) => void;
+  onOpenAdminAuthModal: () => void;
+  onLogoutAdmin: () => void;
   currentUser: User | null;
   sheetsConfig: GoogleSheetsConfig;
   webhookConfig?: WebhookSyncConfig;
@@ -41,7 +41,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   activeTab,
   setActiveTab,
   isAdminView,
-  setIsAdminView,
+  onOpenAdminAuthModal,
+  onLogoutAdmin,
   currentUser,
   sheetsConfig,
   webhookConfig,
@@ -85,39 +86,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
             </div>
 
-            {/* Role Switcher: Admin Agency vs Client Portal */}
-            <div className="hidden lg:flex items-center bg-slate-900 border border-slate-800 p-1 rounded-xl">
-              <button
-                onClick={() => {
-                  setIsAdminView(true);
-                  setActiveTab('domains');
-                }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
-                  isAdminView
-                    ? 'bg-indigo-600 text-white shadow-md'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                <Shield className="w-3.5 h-3.5 text-indigo-300" />
-                <span>Panel Admin (Agency)</span>
-              </button>
-              <button
-                onClick={() => {
-                  setIsAdminView(false);
-                  setActiveTab('client-portal');
-                }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
-                  !isAdminView
-                    ? 'bg-amber-600 text-slate-950 shadow-md font-extrabold'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                <UserCheck className="w-3.5 h-3.5" />
-                <span>Portal Pelanggan</span>
-              </button>
-            </div>
-
-            {/* Navigation Tabs */}
+            {/* Navigation Tabs for Client & Admin */}
             <nav className="hidden md:flex items-center gap-1">
               <button
                 onClick={() => setActiveTab('client-portal')}
@@ -130,39 +99,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <Sparkles className="w-4 h-4 text-amber-400" />
                 <span>Dashboard Pelanggan</span>
               </button>
-
-              {isAdminView && (
-                <>
-                  <button
-                    onClick={() => setActiveTab('domains')}
-                    className={`relative px-3.5 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2 cursor-pointer ${
-                      activeTab === 'domains'
-                        ? 'text-white bg-slate-800/90 shadow-sm'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
-                    }`}
-                  >
-                    <Server className="w-4 h-4 text-indigo-400" />
-                    <span>Kelola Domain &amp; Batas Waktu</span>
-                    {expiringCount > 0 && (
-                      <span className="px-1.5 py-0.2 text-[10px] font-bold rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                        {expiringCount} Segera Berakhir
-                      </span>
-                    )}
-                  </button>
-
-                  <button
-                    onClick={() => setActiveTab('security')}
-                    className={`px-3.5 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2 cursor-pointer ${
-                      activeTab === 'security'
-                        ? 'text-white bg-slate-800/90 shadow-sm'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
-                    }`}
-                  >
-                    <Lock className="w-4 h-4 text-emerald-400" />
-                    <span>Pusat Keamanan &amp; DNSSEC</span>
-                  </button>
-                </>
-              )}
 
               <button
                 onClick={() => setActiveTab('search')}
@@ -187,30 +123,58 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <Server className="w-4 h-4 text-violet-400" />
                 <span>Paket Cloud Hosting</span>
               </button>
+
+              {/* Protected Admin Tabs - ONLY UNLOCKED IN ADMIN VIEW */}
+              {isAdminView && (
+                <>
+                  <button
+                    onClick={() => setActiveTab('domains')}
+                    className={`relative px-3.5 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2 cursor-pointer ${
+                      activeTab === 'domains'
+                        ? 'text-white bg-indigo-600/90 shadow-md'
+                        : 'text-indigo-300 hover:text-white hover:bg-indigo-500/20'
+                    }`}
+                  >
+                    <Shield className="w-4 h-4 text-indigo-300" />
+                    <span>Kelola Domain &amp; Lunas (Admin)</span>
+                    {expiringCount > 0 && (
+                      <span className="px-1.5 py-0.2 text-[10px] font-bold rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                        {expiringCount}
+                      </span>
+                    )}
+                  </button>
+
+                  <button
+                    onClick={() => setActiveTab('security')}
+                    className={`px-3.5 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2 cursor-pointer ${
+                      activeTab === 'security'
+                        ? 'text-white bg-indigo-600/90 shadow-md'
+                        : 'text-indigo-300 hover:text-white hover:bg-indigo-500/20'
+                    }`}
+                  >
+                    <Lock className="w-4 h-4 text-emerald-400" />
+                    <span>Pusat Keamanan &amp; DNSSEC</span>
+                  </button>
+                </>
+              )}
             </nav>
           </div>
 
-          {/* Right Action Elements: Google Sheets Sync (Admin Only), Currency, Add Domain */}
+          {/* Right Action Elements */}
           <div className="flex items-center gap-3">
-            {/* Google Sheets / Webhook Status Indicator - ONLY VISIBLE IN ADMIN VIEW */}
+            {/* Google Sheets / Database - STRICTLY ADMIN ONLY */}
             {isAdminView && (
               <button
                 onClick={onOpenSheetsModal}
-                title="Kelola Sinkronisasi Google Sheets &amp; Webhook (Rahasia Admin)"
+                title="Database Rahasia Admin (Google Sheets Sync)"
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-2 transition cursor-pointer border ${
                   webhookConfig?.webhookUrl || sheetsConfig.spreadsheetId
-                    ? 'bg-emerald-950/40 text-emerald-300 border-emerald-500/30 hover:bg-emerald-900/40'
-                    : 'bg-slate-800/60 text-slate-300 border-slate-700/80 hover:bg-slate-800 hover:text-white'
+                    ? 'bg-emerald-950/60 text-emerald-300 border-emerald-500/40 hover:bg-emerald-900/50'
+                    : 'bg-slate-800/80 text-slate-300 border-slate-700 hover:bg-slate-800'
                 }`}
               >
-                <FileSpreadsheet className={`w-4 h-4 ${webhookConfig?.webhookUrl || sheetsConfig.spreadsheetId ? 'text-emerald-400' : 'text-slate-400'}`} />
-                <span className="hidden lg:inline">
-                  {webhookConfig?.webhookUrl
-                    ? 'Database Sheet Aktif'
-                    : sheetsConfig.spreadsheetId
-                    ? 'Google Sheets Aktif'
-                    : 'Database Admin'}
-                </span>
+                <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
+                <span className="hidden lg:inline font-bold">Database Admin (Sheet)</span>
                 {(sheetsConfig.isSyncing || webhookConfig?.isSendingWebhook) && (
                   <RefreshCw className="w-3.5 h-3.5 animate-spin text-emerald-400" />
                 )}
@@ -241,13 +205,40 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             </div>
 
+            {/* Admin Lock Button vs Admin Active Status Badge */}
+            {!isAdminView ? (
+              <button
+                onClick={onOpenAdminAuthModal}
+                className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+                title="Masuk sebagai Administrator dengan PIN domain2026"
+              >
+                <KeyRound className="w-3.5 h-3.5 text-amber-400" />
+                <span className="hidden sm:inline">Login Admin</span>
+              </button>
+            ) : (
+              <div className="flex items-center gap-2">
+                <span className="px-3 py-1 rounded-xl bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs font-extrabold flex items-center gap-1.5">
+                  <Shield className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>MODE ADMIN</span>
+                </span>
+                <button
+                  onClick={onLogoutAdmin}
+                  className="px-2.5 py-1 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/20 text-xs font-bold transition flex items-center gap-1 cursor-pointer"
+                  title="Keluar dari Mode Admin"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Keluar Admin</span>
+                </button>
+              </div>
+            )}
+
             {isAdminView && (
               <button
                 onClick={onOpenRegisterModal}
                 className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs shadow-lg shadow-amber-500/20 transition cursor-pointer"
               >
                 <PlusCircle className="w-4 h-4" />
-                <span>Jual Domain Baru</span>
+                <span>Daftar Domain (Admin)</span>
               </button>
             )}
           </div>

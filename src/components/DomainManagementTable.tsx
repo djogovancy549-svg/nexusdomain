@@ -31,6 +31,7 @@ import { calculateRemainingDays, getExpirationStatusLabel } from '../services/go
 interface DomainManagementTableProps {
   domains: DomainItem[];
   currency: 'IDR' | 'USD';
+  isAdminView?: boolean;
   onOpenDnsModal: (domain: DomainItem) => void;
   onOpenHostingModal: (domain: DomainItem) => void;
   onOpenRenewModal: (domain: DomainItem) => void;
@@ -49,6 +50,7 @@ interface DomainManagementTableProps {
 export const DomainManagementTable: React.FC<DomainManagementTableProps> = ({
   domains,
   currency,
+  isAdminView = true,
   onOpenDnsModal,
   onOpenHostingModal,
   onOpenRenewModal,
@@ -388,17 +390,30 @@ export const DomainManagementTable: React.FC<DomainManagementTableProps> = ({
                       </span>
 
                       {/* Payment Status Pill */}
-                      <button
-                        onClick={() => onTogglePaymentStatus(domain.id)}
-                        title="Klik untuk mengubah status pembayaran pelanggan"
-                        className={`text-[11px] font-bold px-2 py-0.5 rounded border transition cursor-pointer ${
-                          domain.paymentStatus === 'paid'
-                            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                            : 'bg-amber-500/10 text-amber-400 border-amber-500/30'
-                        }`}
-                      >
-                        {domain.paymentStatus === 'paid' ? '✓ Lunas' : '⏳ Menunggu Pembayaran'}
-                      </button>
+                      {isAdminView ? (
+                        <button
+                          onClick={() => onTogglePaymentStatus(domain.id)}
+                          title="Klik untuk mengubah status pembayaran pelanggan (Mode Admin)"
+                          className={`text-[11px] font-bold px-2.5 py-0.5 rounded border transition cursor-pointer ${
+                            domain.paymentStatus === 'paid'
+                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20'
+                              : 'bg-amber-500/10 text-amber-400 border-amber-500/30 hover:bg-amber-500/20'
+                          }`}
+                        >
+                          {domain.paymentStatus === 'paid' ? '✓ Lunas' : '⏳ Menunggu Pembayaran'}
+                        </button>
+                      ) : (
+                        <span
+                          className={`text-[11px] font-bold px-2.5 py-0.5 rounded border ${
+                            domain.paymentStatus === 'paid'
+                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                              : 'bg-amber-500/10 text-amber-400 border-amber-500/30'
+                          }`}
+                          title="Status Pembayaran Terverifikasi Admin"
+                        >
+                          {domain.paymentStatus === 'paid' ? '✓ Lunas' : '⏳ Menunggu Pembayaran'}
+                        </span>
+                      )}
 
                       {/* Selling Price */}
                       <span className="text-[11px] font-mono text-slate-300 bg-slate-800/80 px-2 py-0.5 rounded border border-slate-700">

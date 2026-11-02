@@ -24,6 +24,7 @@ interface RegisterDomainModalProps {
   initialDomainName?: string;
   initialTld?: string;
   initialPackageId?: string;
+  isAdminView?: boolean;
   onRegisterDomain: (domain: DomainItem) => void;
 }
 
@@ -34,6 +35,7 @@ export const RegisterDomainModal: React.FC<RegisterDomainModalProps> = ({
   initialDomainName = '',
   initialTld = '.com',
   initialPackageId = 'business',
+  isAdminView = false,
   onRegisterDomain,
 }) => {
   if (!isOpen) return null;
@@ -46,7 +48,9 @@ export const RegisterDomainModal: React.FC<RegisterDomainModalProps> = ({
   const [clientEmail, setClientEmail] = useState('');
   const [clientPhone, setClientPhone] = useState('');
   const [salePrice, setSalePrice] = useState<number>(149000);
-  const [paymentStatus, setPaymentStatus] = useState<'paid' | 'pending' | 'unpaid'>('paid');
+  const [paymentStatus, setPaymentStatus] = useState<'paid' | 'pending' | 'unpaid'>(
+    isAdminView ? 'paid' : 'pending'
+  );
   const [hostingPackageId, setHostingPackageId] = useState(initialPackageId || 'business');
   const [tenureYears, setTenureYears] = useState<number>(1);
   const [serverLocation, setServerLocation] = useState('Jakarta (Equinix JK1)');
@@ -257,15 +261,21 @@ export const RegisterDomainModal: React.FC<RegisterDomainModalProps> = ({
                 <label className="text-[11px] text-slate-400 block mb-1">
                   Status Pembayaran Faktur
                 </label>
-                <select
-                  value={paymentStatus}
-                  onChange={(e) => setPaymentStatus(e.target.value as any)}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none font-semibold"
-                >
-                  <option value="paid">LUNAS (Sudah Dibayar Pelanggan)</option>
-                  <option value="pending">Menunggu Pembayaran (Pending)</option>
-                  <option value="unpaid">Belum Lunas (Unpaid)</option>
-                </select>
+                {isAdminView ? (
+                  <select
+                    value={paymentStatus}
+                    onChange={(e) => setPaymentStatus(e.target.value as any)}
+                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none font-semibold"
+                  >
+                    <option value="paid">LUNAS (Sudah Dibayar Pelanggan)</option>
+                    <option value="pending">Menunggu Pembayaran (Pending)</option>
+                    <option value="unpaid">Belum Lunas (Unpaid)</option>
+                  </select>
+                ) : (
+                  <div className="w-full bg-amber-500/10 border border-amber-500/20 rounded-xl px-3 py-2 text-xs font-bold text-amber-300">
+                    ⏳ Menunggu Pembayaran (Tagihan Transfer Bank / QRIS)
+                  </div>
+                )}
               </div>
             </div>
 
