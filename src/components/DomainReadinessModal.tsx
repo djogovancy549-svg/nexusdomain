@@ -282,7 +282,7 @@ export const DomainReadinessModal: React.FC<DomainReadinessModalProps> = ({
         <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
           <div className="flex items-center gap-1.5 text-slate-400">
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span>Domain memenuhi seluruh standar teknis ICANN &amp; PANDI</span>
+            <span>Domain memenuhi seluruh standar teknis domain internasional &amp; Indonesia</span>
           </div>
           <button
             onClick={onClose}

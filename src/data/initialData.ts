@@ -69,7 +69,7 @@ export const TLD_PRICING_CATALOG: TldPricing[] = [
     normalPriceIDR: 275000,
     promoPriceUSD: 14.90,
     normalPriceUSD: 18.20,
-    discountBadge: 'Resmi PANDI',
+    discountBadge: 'Resmi .ID',
     popular: true,
     type: 'Indonesia ccTLD',
   },

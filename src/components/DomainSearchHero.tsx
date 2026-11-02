@@ -94,7 +94,7 @@ export const DomainSearchHero: React.FC<DomainSearchHeroProps> = ({
         {/* Top Feature Pill */}
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-indigo-500/30 text-indigo-300 text-xs font-semibold mb-6 shadow-sm">
           <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-          <span>Resmi Mitra PANDI &amp; ICANN Accredited • Proteksi DNSSEC &amp; SSL Otomatis</span>
+          <span>Domain Resmi &amp; Akreditasi Global • Proteksi DNSSEC &amp; SSL Otomatis</span>
         </div>
 
         {/* Hero Headline */}
@@ -224,7 +224,7 @@ export const DomainSearchHero: React.FC<DomainSearchHeroProps> = ({
                   </span>
                 </div>
                 <p className="text-xs text-slate-300 mt-1">
-                  Domain resmi Indonesia PANDI • Siap langsung dihubungkan ke Cloudflare Pages <strong className="text-amber-300 font-mono">adminsipermas.pages.dev</strong> dengan proteksi DNSSEC &amp; SSL gratis seumur hidup.
+                  Domain resmi Indonesia (.id) • Siap langsung dihubungkan ke Cloudflare Pages <strong className="text-amber-300 font-mono">adminsipermas.pages.dev</strong> dengan proteksi DNSSEC &amp; SSL gratis seumur hidup.
                 </p>
                 <div className="mt-2 text-xs font-mono text-amber-300 font-bold">
                   Rp 12.000 <span className="text-slate-400 line-through text-[11px] font-normal">Rp 45.000</span> / tahun pertama
