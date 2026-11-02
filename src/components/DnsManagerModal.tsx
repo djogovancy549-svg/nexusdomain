@@ -9,6 +9,8 @@ import {
   Save,
   CheckCircle2,
   Key,
+  Cloud,
+  Zap,
 } from 'lucide-react';
 import { DnsRecord, DomainItem } from '../types';
 
@@ -36,6 +38,14 @@ export const DnsManagerModal: React.FC<DnsManagerModalProps> = ({
     domain.nameservers.every((ns) => ns.includes('nexahost')) ? 'default' : 'custom'
   );
 
+  // Cloudflare Pages Quick Preset State
+  const defaultCfTarget = domain.name.includes('sipermas')
+    ? 'adminsipermas.pages.dev'
+    : `${domain.name.split('.')[0]}.pages.dev`;
+  const [cfPagesTarget, setCfPagesTarget] = useState(defaultCfTarget);
+  const [showCfPreset, setShowCfPreset] = useState(false);
+  const [cfAppliedMsg, setCfAppliedMsg] = useState(false);
+
   // New record input state
   const [newType, setNewType] = useState<DnsRecord['type']>('A');
   const [newName, setNewName] = useState('');
@@ -62,6 +72,45 @@ export const DnsManagerModal: React.FC<DnsManagerModalProps> = ({
     setNewName('');
     setNewValue('');
     setShowAddForm(false);
+  };
+
+  const applyCloudflarePagesPreset = () => {
+    if (!cfPagesTarget.trim()) return;
+    const target = cfPagesTarget
+      .trim()
+      .replace(/^https?:\/\//, '')
+      .replace(/\/.*$/, '');
+
+    // Remove conflicting A or CNAME records for @, domain name, and www
+    const filtered = records.filter(
+      (r) =>
+        !(
+          (r.name === '@' || r.name === domain.name || r.name === 'www') &&
+          (r.type === 'A' || r.type === 'CNAME')
+        )
+    );
+
+    const updated: DnsRecord[] = [
+      ...filtered,
+      {
+        id: `rec-cname-root-${Date.now()}`,
+        type: 'CNAME',
+        name: '@',
+        value: target,
+        ttl: 3600,
+      },
+      {
+        id: `rec-cname-www-${Date.now() + 1}`,
+        type: 'CNAME',
+        name: 'www',
+        value: target,
+        ttl: 3600,
+      },
+    ];
+
+    setRecords(updated);
+    setCfAppliedMsg(true);
+    setTimeout(() => setCfAppliedMsg(false), 4000);
   };
 
   const handleDeleteRecord = (record: DnsRecord) => {
@@ -208,6 +257,79 @@ export const DnsManagerModal: React.FC<DnsManagerModalProps> = ({
                   placeholder="ns1.externaldns.com&#10;ns2.externaldns.com"
                   className="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs text-white font-mono focus:outline-none focus:border-indigo-500"
                 />
+              </div>
+            )}
+          </div>
+
+          {/* Quick Preset: Cloudflare Pages / Workers (*.pages.dev) */}
+          <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-slate-900 to-indigo-500/10 border border-amber-500/30 space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 bg-amber-500/20 text-amber-400 rounded-xl">
+                  <Cloud className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                    <span>Preset Cepat: Hubungkan ke Cloudflare Pages</span>
+                    <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">
+                      1-Klik DNS
+                    </span>
+                  </h4>
+                  <p className="text-[11px] text-slate-400">
+                    Arahkan domain ini ({domain.name}) ke aplikasi Cloudflare Pages seperti <strong className="text-amber-300">adminsipermas.pages.dev</strong>
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowCfPreset(!showCfPreset)}
+                className="text-xs font-semibold text-amber-400 hover:text-amber-300 self-start sm:self-auto cursor-pointer"
+              >
+                {showCfPreset ? 'Sembunyikan' : 'Buka Pengaturan Pages'}
+              </button>
+            </div>
+
+            {showCfPreset && (
+              <div className="pt-2 border-t border-slate-800 space-y-3">
+                <div className="flex flex-col sm:flex-row items-center gap-2">
+                  <div className="flex-1 w-full">
+                    <label className="text-[10px] text-slate-400 block mb-1">
+                      URL Host Target Cloudflare Pages:
+                    </label>
+                    <input
+                      type="text"
+                      value={cfPagesTarget}
+                      onChange={(e) => setCfPagesTarget(e.target.value)}
+                      placeholder="adminsipermas.pages.dev"
+                      className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-mono focus:outline-none focus:border-amber-400"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={applyCloudflarePagesPreset}
+                    className="w-full sm:w-auto mt-4 sm:mt-0 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-amber-500/25 shrink-0"
+                  >
+                    <Zap className="w-3.5 h-3.5" />
+                    <span>Terapkan CNAME Pages</span>
+                  </button>
+                </div>
+
+                <div className="text-[11px] text-slate-400 bg-slate-900/80 p-2.5 rounded-xl border border-slate-800/80">
+                  <strong className="text-slate-200 block mb-0.5">Yang akan dikonfigurasi:</strong>
+                  • <code>CNAME @ &rarr; {cfPagesTarget || 'adminsipermas.pages.dev'}</code> (Apex root domain)<br />
+                  • <code>CNAME www &rarr; {cfPagesTarget || 'adminsipermas.pages.dev'}</code> (Subdomain www)<br />
+                  • Menghapus record IP default (A record) yang bentrok secara otomatis.
+                </div>
+              </div>
+            )}
+
+            {cfAppliedMsg && (
+              <div className="p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2 animate-in fade-in">
+                <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+                <span>
+                  <strong>Berhasil diterapkan ke tabel records di bawah!</strong> Klik <em>"Simpan Perubahan DNS"</em> untuk mempublikasikan.
+                </span>
               </div>
             )}
           </div>

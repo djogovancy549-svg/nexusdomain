@@ -139,6 +139,18 @@ export const DomainSearchHero: React.FC<DomainSearchHeroProps> = ({
               <span className="text-slate-400 text-[11px]">{formatPrice(tldItem)}/th</span>
             </button>
           ))}
+          {/* Quick preset for user request */}
+          <button
+            onClick={() => {
+              setSearchTerm('sipermas.my.id');
+              setSearchQuery('sipermas.my.id');
+            }}
+            className="px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 transition cursor-pointer flex items-center gap-1.5 shadow-sm"
+          >
+            <Sparkles className="w-3 h-3 text-amber-400" />
+            <span className="font-bold">sipermas.my.id</span>
+            <span className="text-amber-200/80 text-[11px] font-mono">Rp 12.000/th</span>
+          </button>
         </div>
 
         {/* TLD Filter Category Tabs */}
@@ -186,6 +198,40 @@ export const DomainSearchHero: React.FC<DomainSearchHeroProps> = ({
         </div>
 
         {/* Domain Search Results Grid */}
+        {baseKeyword === 'sipermas' && (
+          <div className="mt-6 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-500/20 via-orange-500/10 to-indigo-500/20 border border-amber-500/40 text-left flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-in fade-in">
+            <div className="flex items-start gap-3.5">
+              <div className="p-2.5 bg-amber-500/20 text-amber-400 rounded-xl shrink-0 mt-0.5">
+                <Sparkles className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h4 className="text-base font-bold text-white font-mono">
+                    sipermas<span className="text-amber-400">.my.id</span>
+                  </h4>
+                  <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                    Tersedia &amp; Siap Dihubungkan
+                  </span>
+                </div>
+                <p className="text-xs text-slate-300 mt-1">
+                  Domain resmi Indonesia PANDI • Siap langsung dihubungkan ke Cloudflare Pages <strong className="text-amber-300 font-mono">adminsipermas.pages.dev</strong> dengan proteksi DNSSEC &amp; SSL gratis seumur hidup.
+                </p>
+                <div className="mt-2 text-xs font-mono text-amber-300 font-bold">
+                  Rp 12.000 <span className="text-slate-400 line-through text-[11px] font-normal">Rp 45.000</span> / tahun pertama
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => onSelectRegisterDomain('sipermas', '.my.id', currency === 'IDR' ? 12000 : 0.99)}
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-xs shadow-lg shadow-orange-500/25 transition flex items-center justify-center gap-2 cursor-pointer shrink-0"
+            >
+              <Zap className="w-4 h-4" />
+              <span>Daftarkan sipermas.my.id</span>
+            </button>
+          </div>
+        )}
+
         <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 text-left">
           {filteredTlds.map((tldItem) => {
             const fullDomain = `${baseKeyword}${tldItem.tld}`;

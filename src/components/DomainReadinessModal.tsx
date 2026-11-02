@@ -32,6 +32,13 @@ export const DomainReadinessModal: React.FC<DomainReadinessModalProps> = ({
   const [isRunningCheck, setIsRunningCheck] = useState(false);
   const [checkCompleted, setCheckCompleted] = useState(true);
 
+  const pagesCname = domain.dnsRecords.find(
+    (r) =>
+      r.type === 'CNAME' &&
+      (r.name === '@' || r.name === domain.name || r.name === 'www') &&
+      r.value.includes('.pages.dev')
+  );
+
   const handleRunCheck = () => {
     setIsRunningCheck(true);
     setCheckCompleted(false);
@@ -84,8 +91,17 @@ export const DomainReadinessModal: React.FC<DomainReadinessModalProps> = ({
                 </span>
               </div>
               <p className="text-xs text-slate-300 mt-1">
-                Domain <strong>{domain.name}</strong> sudah diarahkan ke IP Server{' '}
-                <strong className="text-indigo-400 font-mono">{domain.ipAddress}</strong> dengan enkripsi TLS 1.3.
+                {pagesCname ? (
+                  <>
+                    Domain <strong>{domain.name}</strong> diarahkan via CNAME ke Cloudflare Pages{' '}
+                    <strong className="text-amber-300 font-mono">{pagesCname.value}</strong> dengan CDN Edge Global Cloudflare.
+                  </>
+                ) : (
+                  <>
+                    Domain <strong>{domain.name}</strong> sudah diarahkan ke IP Server{' '}
+                    <strong className="text-indigo-400 font-mono">{domain.ipAddress}</strong> dengan enkripsi TLS 1.3.
+                  </>
+                )}
               </p>
             </div>
 
@@ -134,15 +150,23 @@ export const DomainReadinessModal: React.FC<DomainReadinessModalProps> = ({
                   </div>
                   <div>
                     <strong className="text-white block font-medium">
-                      DNS A Record Resolution (IP Hosting)
+                      {pagesCname ? 'DNS CNAME Routing (Cloudflare Pages)' : 'DNS A Record Resolution (IP Hosting)'}
                     </strong>
                     <span className="text-slate-400 text-[11px]">
-                      Host @ dan www mengarah tepat ke IP Server: <strong className="text-indigo-300 font-mono">{domain.ipAddress}</strong>
+                      {pagesCname ? (
+                        <>
+                          Host @ dan www diarahkan ke: <strong className="text-amber-300 font-mono">{pagesCname.value}</strong>
+                        </>
+                      ) : (
+                        <>
+                          Host @ dan www mengarah tepat ke IP Server: <strong className="text-indigo-300 font-mono">{domain.ipAddress}</strong>
+                        </>
+                      )}
                     </span>
                   </div>
                 </div>
                 <span className="px-2.5 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                  Terhubung ke Server
+                  {pagesCname ? 'Terhubung ke Pages.dev' : 'Terhubung ke Server'}
                 </span>
               </div>
 

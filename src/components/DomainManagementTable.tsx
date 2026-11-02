@@ -23,6 +23,7 @@ import {
   Phone,
   FileCheck,
   Wifi,
+  Cloud,
 } from 'lucide-react';
 import { DomainItem } from '../types';
 import { calculateRemainingDays, getExpirationStatusLabel } from '../services/googleSheets';
@@ -35,6 +36,7 @@ interface DomainManagementTableProps {
   onOpenRenewModal: (domain: DomainItem) => void;
   onOpenCertificateModal: (domain: DomainItem) => void;
   onOpenReadinessModal: (domain: DomainItem) => void;
+  onOpenCloudflarePagesModal?: (domain: DomainItem) => void;
   onToggleAutoRenew: (domainId: string) => void;
   onToggleWhoisPrivacy: (domainId: string) => void;
   onToggleDnssec: (domainId: string) => void;
@@ -52,6 +54,7 @@ export const DomainManagementTable: React.FC<DomainManagementTableProps> = ({
   onOpenRenewModal,
   onOpenCertificateModal,
   onOpenReadinessModal,
+  onOpenCloudflarePagesModal,
   onToggleAutoRenew,
   onToggleWhoisPrivacy,
   onToggleDnssec,
@@ -543,6 +546,18 @@ export const DomainManagementTable: React.FC<DomainManagementTableProps> = ({
                       <RefreshCw className="w-3.5 h-3.5" />
                       <span>{daysRemaining < 0 ? 'Restore' : 'Perpanjang'}</span>
                     </button>
+
+                    {/* Connect to Cloudflare Pages */}
+                    {onOpenCloudflarePagesModal && (
+                      <button
+                        onClick={() => onOpenCloudflarePagesModal(domain)}
+                        title="Hubungkan domain ini ke aplikasi Cloudflare Pages (*.pages.dev)"
+                        className="px-3 py-2 rounded-xl text-xs font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+                      >
+                        <Cloud className="w-3.5 h-3.5 text-amber-400" />
+                        <span>Pages.dev</span>
+                      </button>
+                    )}
 
                     {/* Manage DNS */}
                     <button

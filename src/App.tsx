@@ -14,6 +14,7 @@ import { ConfirmationModal } from './components/ConfirmationModal';
 import { DomainOwnershipCertificateModal } from './components/DomainOwnershipCertificateModal';
 import { DomainReadinessModal } from './components/DomainReadinessModal';
 import { CloudflareDeployModal } from './components/CloudflareDeployModal';
+import { CloudflarePagesConnectModal } from './components/CloudflarePagesConnectModal';
 
 import {
   DomainItem,
@@ -138,6 +139,7 @@ export default function App() {
   const [certModalDomain, setCertModalDomain] = useState<DomainItem | null>(null);
   const [readinessModalDomain, setReadinessModalDomain] = useState<DomainItem | null>(null);
   const [isCloudflareModalOpen, setIsCloudflareModalOpen] = useState(false);
+  const [cfPagesModalDomain, setCfPagesModalDomain] = useState<DomainItem | null>(null);
 
   // Security scan state
   const [isScanning, setIsScanning] = useState(false);
@@ -589,6 +591,51 @@ export default function App() {
     });
   };
 
+  // 1-Click Cloudflare Pages DNS Connector (*.pages.dev)
+  const handleApplyPagesDns = (domainId: string, pagesUrl: string) => {
+    const cleanTarget = pagesUrl.trim().replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+    let domainName = '';
+    const updated = domains.map((d) => {
+      if (d.id === domainId) {
+        domainName = d.name;
+        // Filter out conflicting A or CNAME records for @ and www
+        const filtered = d.dnsRecords.filter(
+          (r) =>
+            !(
+              (r.name === '@' || r.name === d.name || r.name === 'www') &&
+              (r.type === 'A' || r.type === 'CNAME')
+            )
+        );
+        const updatedDns: DnsRecord[] = [
+          ...filtered,
+          {
+            id: `rec-cname-root-${Date.now()}`,
+            type: 'CNAME',
+            name: '@',
+            value: cleanTarget,
+            ttl: 3600,
+          },
+          {
+            id: `rec-cname-www-${Date.now() + 1}`,
+            type: 'CNAME',
+            name: 'www',
+            value: cleanTarget,
+            ttl: 3600,
+          },
+        ];
+        return {
+          ...d,
+          dnsRecords: updatedDns,
+        };
+      }
+      return d;
+    });
+
+    setDomains(updated);
+    addSecurityLog(domainName || 'domain', `Record CNAME diarahkan ke Cloudflare Pages: ${cleanTarget}`, 'info');
+    showToast(`DNS berhasil diarahkan ke Cloudflare Pages (${cleanTarget})!`, 'success');
+  };
+
   // Update PHP Version in cPanel
   const handleUpdatePhpVersion = (domainId: string, version: string) => {
     const updated = domains.map((d) => {
@@ -718,6 +765,7 @@ export default function App() {
             onOpenRenewModal={(d) => setRenewModalDomain(d)}
             onOpenCertificateModal={(d) => setCertModalDomain(d)}
             onOpenReadinessModal={(d) => setReadinessModalDomain(d)}
+            onOpenCloudflarePagesModal={(d) => setCfPagesModalDomain(d)}
             onToggleAutoRenew={handleToggleAutoRenew}
             onToggleWhoisPrivacy={handleToggleWhoisPrivacy}
             onToggleDnssec={handleToggleDnssec}
@@ -871,6 +919,13 @@ export default function App() {
       <CloudflareDeployModal
         isOpen={isCloudflareModalOpen}
         onClose={() => setIsCloudflareModalOpen(false)}
+      />
+
+      <CloudflarePagesConnectModal
+        domain={cfPagesModalDomain}
+        isOpen={Boolean(cfPagesModalDomain)}
+        onClose={() => setCfPagesModalDomain(null)}
+        onApplyPagesDns={handleApplyPagesDns}
       />
     </div>
   );
