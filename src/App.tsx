@@ -68,7 +68,7 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-  // Domains & Logs State (Fresh and empty)
+  // Domains & Logs State
   const [domains, setDomains] = useState<DomainItem[]>(() => {
     try {
       const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -76,7 +76,7 @@ export default function App() {
     } catch (e) {
       console.warn('Failed to read localStorage:', e);
     }
-    return [];
+    return INITIAL_DOMAINS;
   });
 
   const [securityLogs, setSecurityLogs] = useState<SecurityLog[]>(() => {
@@ -86,7 +86,7 @@ export default function App() {
     } catch (e) {
       console.warn('Failed to read logs:', e);
     }
-    return [];
+    return INITIAL_SECURITY_LOGS;
   });
 
   // Google Sheets Config

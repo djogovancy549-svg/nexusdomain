@@ -1,8 +1,56 @@
 import { DomainItem, HostingPackage, SecurityLog, TldPricing } from '../types';
 
-export const INITIAL_DOMAINS: DomainItem[] = [];
+export const INITIAL_DOMAINS: DomainItem[] = [
+  {
+    id: 'dom-sipermas-1',
+    name: 'sipermas.com',
+    tld: '.com',
+    clientName: 'Administrator Sipermas',
+    clientEmail: 'admin@sipermas.com',
+    hostingPlan: 'Business Cloud Pro',
+    serverLocation: 'Singapore (SG-1)',
+    registrationDate: '2025-01-01',
+    expirationDate: '2027-01-01',
+    status: 'active',
+    autoRenew: true,
+    dnssecEnabled: true,
+    sslStatus: 'active',
+    sslIssuer: "Let's Encrypt Authority X3",
+    sslExpiryDate: '2028-01-01',
+    whoisPrivacy: true,
+    eppCode: 'EPP-SIPERMAS-9821',
+    ipAddress: '104.21.74.12',
+    nameservers: ['ns1.cloudflare.com', 'ns2.cloudflare.com'],
+    dnsRecords: [
+      { id: 'rec-1', type: 'A', name: '@', value: '104.21.74.12', ttl: 3600 },
+      { id: 'rec-2', type: 'CNAME', name: 'www', value: 'adminsipermas.pages.dev', ttl: 3600 },
+      { id: 'rec-3', type: 'TXT', name: '@', value: 'v=spf1 include:_spf.google.com ~all', ttl: 3600 }
+    ],
+    diskUsageMB: 1240,
+    diskLimitMB: 102400,
+    bandwidthUsageGB: 18.4,
+    bandwidthLimitGB: 1000,
+    phpVersion: '8.2',
+    clientPhone: '+6281234567890',
+    salePriceIDR: 149000,
+    paymentStatus: 'paid',
+    invoiceNumber: 'INV-SIPERMAS-2025-001',
+    certificateNumber: 'CERT-SIPERMAS-8819',
+    isTransferLocked: true,
+  }
+];
 
-export const INITIAL_SECURITY_LOGS: SecurityLog[] = [];
+export const INITIAL_SECURITY_LOGS: SecurityLog[] = [
+  {
+    id: 'SEC-1001',
+    timestamp: '2025-01-01 10:00:00',
+    domain: 'sipermas.com',
+    event: 'Domain berhasil didaftarkan dan dihubungkan ke Cloudflare Pages (adminsipermas.pages.dev)',
+    ip: '103.147.154.21 (NexaHost Engine)',
+    severity: 'info',
+    status: 'Enforced',
+  }
+];
 
 export const TLD_PRICING_CATALOG: TldPricing[] = [
   {

@@ -11,5 +11,5 @@ command = "npm run build"
 
 [vars]
 APP_NAME = "EbiDomain"
-DOMAIN = "ebidomain.cvebi.workers.dev"
+DOMAIN = "sipermas.com"
 COMPANY = "CV Ebi"
