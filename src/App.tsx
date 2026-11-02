@@ -37,11 +37,18 @@ import {
   calculateRemainingDays,
   SHEET_TITLE_PREFIX,
 } from './services/googleSheets';
+import {
+  sendDataToSheetWebhook,
+  WebhookSyncConfig,
+  DEFAULT_WEBHOOK_URL,
+  DEFAULT_SHEET_URL,
+} from './services/webhookSync';
 import { CheckCircle2, AlertCircle, FileSpreadsheet, ExternalLink, X } from 'lucide-react';
 
 const LOCAL_STORAGE_KEY = 'nexahost_domains_clean_v3';
 const LOCAL_STORAGE_LOGS = 'nexahost_logs_clean_v3';
 const LOCAL_STORAGE_SHEET_ID = 'nexahost_sheet_id_v1';
+const LOCAL_STORAGE_WEBHOOK = 'nexahost_webhook_config_v1';
 
 // Clear legacy dummy cache so application starts 100% clean
 try {
@@ -90,6 +97,31 @@ export default function App() {
     isSyncing: false,
     sheetTitle: SHEET_TITLE_PREFIX,
   });
+
+  // Google Apps Script Webhook Deploy & Sheet URL Config
+  const [webhookConfig, setWebhookConfig] = useState<WebhookSyncConfig>(() => {
+    try {
+      const saved = localStorage.getItem(LOCAL_STORAGE_WEBHOOK);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.warn('Failed to read webhookConfig from localStorage:', e);
+    }
+    return {
+      webhookUrl: DEFAULT_WEBHOOK_URL,
+      sheetUrl: DEFAULT_SHEET_URL,
+      autoSyncWebhook: true,
+      lastWebhookSyncAt: null,
+      isSendingWebhook: false,
+    };
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(LOCAL_STORAGE_WEBHOOK, JSON.stringify(webhookConfig));
+    } catch (e) {
+      console.warn('Failed to save webhookConfig to localStorage:', e);
+    }
+  }, [webhookConfig]);
 
   // Modal States
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
@@ -210,6 +242,36 @@ export default function App() {
     [domains, securityLogs, sheetsConfig.spreadsheetId, sheetsConfig.spreadsheetUrl]
   );
 
+  // Sync to Google Sheets via Webhook Deploy (Apps Script)
+  const triggerWebhookSync = useCallback(
+    async (customDomains?: DomainItem[]): Promise<boolean> => {
+      const targetDomains = customDomains || domains;
+      if (!webhookConfig.webhookUrl) {
+        showToast('Silakan masukkan URL Webhook Deploy Google Apps Script di tab Webhook.', 'info');
+        setIsSheetsModalOpen(true);
+        return false;
+      }
+
+      setWebhookConfig((prev) => ({ ...prev, isSendingWebhook: true }));
+      try {
+        const res = await sendDataToSheetWebhook(webhookConfig.webhookUrl, targetDomains, securityLogs);
+        const now = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        setWebhookConfig((prev) => ({
+          ...prev,
+          isSendingWebhook: false,
+          lastWebhookSyncAt: `Pukul ${now}`,
+        }));
+        showToast(res.message, 'success', webhookConfig.sheetUrl || undefined);
+        return true;
+      } catch (err: any) {
+        setWebhookConfig((prev) => ({ ...prev, isSendingWebhook: false }));
+        showToast(`Gagal kirim ke Webhook: ${err.message}`, 'error');
+        return false;
+      }
+    },
+    [domains, securityLogs, webhookConfig.webhookUrl, webhookConfig.sheetUrl]
+  );
+
   // Initialize Firebase Auth listener on load
   useEffect(() => {
     const unsubscribe = initAuth(
@@ -318,6 +380,18 @@ export default function App() {
         triggerGoogleSheetsSync(updated);
       }, 500);
     }
+
+    // Auto-sync via Webhook Deploy if configured
+    if (webhookConfig.autoSyncWebhook && webhookConfig.webhookUrl) {
+      setTimeout(() => {
+        sendDataToSheetWebhook(webhookConfig.webhookUrl, updated, securityLogs)
+          .then(() => {
+            const now = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            setWebhookConfig((prev) => ({ ...prev, lastWebhookSyncAt: `Pukul ${now}` }));
+          })
+          .catch((e) => console.warn('Auto webhook sync notice:', e));
+      }, 500);
+    }
   };
 
   // Renew / Extend domain expiration date
@@ -352,6 +426,17 @@ export default function App() {
     if (sheetsConfig.autoSync) {
       setTimeout(() => {
         triggerGoogleSheetsSync(updated);
+      }, 500);
+    }
+
+    if (webhookConfig.autoSyncWebhook && webhookConfig.webhookUrl) {
+      setTimeout(() => {
+        sendDataToSheetWebhook(webhookConfig.webhookUrl, updated, securityLogs)
+          .then(() => {
+            const now = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            setWebhookConfig((prev) => ({ ...prev, lastWebhookSyncAt: `Pukul ${now}` }));
+          })
+          .catch((e) => console.warn('Auto webhook sync notice:', e));
       }, 500);
     }
   };
@@ -606,6 +691,7 @@ export default function App() {
         setActiveTab={setActiveTab}
         currentUser={currentUser}
         sheetsConfig={sheetsConfig}
+        webhookConfig={webhookConfig}
         currency={currency}
         setCurrency={setCurrency}
         onGoogleSignIn={handleGoogleSignIn}
@@ -725,12 +811,17 @@ export default function App() {
         onClose={() => setIsSheetsModalOpen(false)}
         currentUser={currentUser}
         sheetsConfig={sheetsConfig}
+        webhookConfig={webhookConfig}
         domains={domains}
         securityLogs={securityLogs}
         onGoogleSignIn={handleGoogleSignIn}
         onTriggerSync={async () => {
           await triggerGoogleSheetsSync();
         }}
+        onTriggerWebhookSync={async () => {
+          await triggerWebhookSync();
+        }}
+        onUpdateWebhookConfig={(cfg) => setWebhookConfig((prev) => ({ ...prev, ...cfg }))}
         onCreateNewSheet={async () => {
           const token = await getAccessToken();
           if (!token) {

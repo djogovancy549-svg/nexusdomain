@@ -13,11 +13,14 @@ import {
 import { User } from 'firebase/auth';
 import { GoogleSheetsConfig } from '../types';
 
+import { WebhookSyncConfig } from '../services/webhookSync';
+
 interface NavbarProps {
   activeTab: 'domains' | 'search' | 'hosting' | 'security' | 'sheets';
   setActiveTab: (tab: 'domains' | 'search' | 'hosting' | 'security' | 'sheets') => void;
   currentUser: User | null;
   sheetsConfig: GoogleSheetsConfig;
+  webhookConfig?: WebhookSyncConfig;
   currency: 'IDR' | 'USD';
   setCurrency: (c: 'IDR' | 'USD') => void;
   onGoogleSignIn: () => void;
@@ -33,6 +36,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   setActiveTab,
   currentUser,
   sheetsConfig,
+  webhookConfig,
   currency,
   setCurrency,
   onGoogleSignIn,
@@ -131,21 +135,25 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Right Action Elements: Google Sheets Sync, Currency, Add Domain, Google Auth */}
           <div className="flex items-center gap-3">
-            {/* Google Sheets Status Indicator */}
+            {/* Google Sheets / Webhook Status Indicator */}
             <button
               onClick={onOpenSheetsModal}
-              title="Kelola Sinkronisasi Google Sheets"
+              title="Kelola Sinkronisasi Google Sheets &amp; Webhook"
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-2 transition cursor-pointer border ${
-                sheetsConfig.spreadsheetId
+                webhookConfig?.webhookUrl || sheetsConfig.spreadsheetId
                   ? 'bg-emerald-950/40 text-emerald-300 border-emerald-500/30 hover:bg-emerald-900/40'
                   : 'bg-slate-800/60 text-slate-300 border-slate-700/80 hover:bg-slate-800 hover:text-white'
               }`}
             >
-              <FileSpreadsheet className={`w-4 h-4 ${sheetsConfig.spreadsheetId ? 'text-emerald-400' : 'text-slate-400'}`} />
+              <FileSpreadsheet className={`w-4 h-4 ${webhookConfig?.webhookUrl || sheetsConfig.spreadsheetId ? 'text-emerald-400' : 'text-slate-400'}`} />
               <span className="hidden lg:inline">
-                {sheetsConfig.spreadsheetId ? 'Google Sheets Aktif' : 'Google Sheets'}
+                {webhookConfig?.webhookUrl
+                  ? 'Webhook Sheet Aktif'
+                  : sheetsConfig.spreadsheetId
+                  ? 'Google Sheets Aktif'
+                  : 'Google Sheets / Webhook'}
               </span>
-              {sheetsConfig.isSyncing && (
+              {(sheetsConfig.isSyncing || webhookConfig?.isSendingWebhook) && (
                 <RefreshCw className="w-3.5 h-3.5 animate-spin text-emerald-400" />
               )}
             </button>
