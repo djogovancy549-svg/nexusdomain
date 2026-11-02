@@ -21,6 +21,7 @@ interface AdminAuthModalProps {
 }
 
 export const SUPER_ADMIN_EMAIL = 'djogovancy549@gmail.com';
+export const SUPER_ADMIN_PIN = 'lionel@$250378/!Q&^>?++)';
 
 export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
   isOpen,
@@ -42,7 +43,7 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
     e.preventDefault();
 
     const cleanPin = pin.trim();
-    if (cleanPin === 'domain2026' || cleanPin === 'admin2026' || cleanPin === 'admin') {
+    if (cleanPin === SUPER_ADMIN_PIN) {
       setError('');
       setIsSuccess(true);
       setTimeout(() => {
@@ -52,7 +53,7 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
         onClose();
       }, 500);
     } else {
-      setError('Kode PIN Admin salah! Masukkan PIN Super Admin: domain2026');
+      setError('Kode PIN Super Admin salah! Silakan periksa kembali PIN Anda.');
     }
   };
 
@@ -78,7 +79,7 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
             </div>
             <h3 className="text-2xl font-extrabold text-white">Otentikasi Super Admin</h3>
             <p className="text-xs text-slate-400 leading-relaxed max-w-xs">
-              Area ini khusus Pemilik Email <strong className="text-amber-300 font-mono">{SUPER_ADMIN_EMAIL}</strong> atau pemegang Kode PIN Admin (<strong className="text-amber-300 font-mono">domain2026</strong>).
+              Area ini khusus Pemilik Email <strong className="text-amber-300 font-mono">{SUPER_ADMIN_EMAIL}</strong> atau pemegang Kode PIN Super Admin.
             </p>
           </div>
 
@@ -108,7 +109,7 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
                   {currentUser.email}
                 </span>
               ) : (
-                <span className="text-slate-400 italic">Otentikasi PIN (domain2026) / Google Auth</span>
+                <span className="text-slate-400 italic">Otentikasi PIN / Google Auth</span>
               )}
             </div>
           </div>
@@ -117,8 +118,7 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
           <form onSubmit={handleVerifyPin} className="space-y-4">
             <div>
               <label className="block text-xs font-bold text-slate-300 mb-1.5 uppercase tracking-wider flex items-center justify-between">
-                <span>Masukkan Kode PIN Admin</span>
-                <span className="text-amber-400 font-mono font-normal">PIN: domain2026</span>
+                <span>Masukkan Kode PIN Super Admin</span>
               </label>
               <div className="relative">
                 <KeyRound className="w-5 h-5 text-amber-400 absolute left-3.5 top-3.5" />
@@ -129,7 +129,7 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
                     setPin(e.target.value);
                     setError('');
                   }}
-                  placeholder="Masukkan PIN: domain2026"
+                  placeholder="Masukkan PIN Super Admin"
                   autoFocus
                   className="w-full pl-11 pr-4 py-3.5 bg-slate-950 border border-amber-500/40 rounded-xl text-white text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition font-mono tracking-widest placeholder:tracking-normal placeholder:text-slate-600"
                 />

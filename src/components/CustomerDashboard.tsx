@@ -18,8 +18,13 @@ import {
   Building2,
   Settings,
   HelpCircle,
+  Phone,
+  Mail,
+  MessageSquare,
+  Send,
 } from 'lucide-react';
 import { DomainItem, TldPricing } from '../types';
+import { ADMIN_PHONE, ADMIN_PHONE_WA, ADMIN_EMAIL } from './PaymentInvoiceModal';
 
 interface CustomerDashboardProps {
   domains: DomainItem[];
@@ -63,6 +68,15 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
   const sslActiveCount = domains.filter((d) => d.sslStatus === 'active').length;
   const dnssecCount = domains.filter((d) => d.dnssecEnabled).length;
 
+  const handleGeneralWhatsapp = () => {
+    const text = encodeURIComponent(`Halo Admin CV EBI (${ADMIN_PHONE}), saya ingin bertanya tentang pendaftaran domain & hosting.`);
+    window.open(`https://wa.me/${ADMIN_PHONE_WA}?text=${text}`, '_blank');
+  };
+
+  const handleGeneralEmail = () => {
+    window.open(`mailto:${ADMIN_EMAIL}?subject=Pertanyaan%20Layanan%20Domain%20CV%20EBI`, '_blank');
+  };
+
   return (
     <div className="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8 animate-in fade-in">
       {/* Welcome & Account Banner */}
@@ -79,11 +93,18 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
               Selamat Datang di Dashboard Pelanggan
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
-              Layanan managed domain &amp; cloud hosting profesional oleh Tim CV EBI. Transfer pembayaran ke Bank BRI resmi dan tim Admin kami yang akan mengonfigurasi DNS &amp; SSL secara profesional.
+              Layanan managed domain &amp; cloud hosting profesional oleh Tim CV EBI. Transfer pembayaran ke Bank BRI resmi dan konfirmasi via HP (<strong className="text-emerald-400 font-mono">{ADMIN_PHONE}</strong>), Email (<strong className="text-indigo-300 font-mono">{ADMIN_EMAIL}</strong>), atau langsung di Web Admin portal.
             </p>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+            <button
+              onClick={handleGeneralWhatsapp}
+              className="px-4 py-3 rounded-2xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 font-bold text-xs transition flex items-center gap-2 cursor-pointer"
+            >
+              <MessageSquare className="w-4 h-4 text-emerald-400" />
+              <span>Kontak WA {ADMIN_PHONE}</span>
+            </button>
             <button
               onClick={onOpenRegisterModal}
               className="px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-sm shadow-lg shadow-amber-500/20 transition flex items-center gap-2 cursor-pointer"
@@ -97,17 +118,17 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
 
       {/* Keunggulan CV EBI vs Hostinger Box */}
       <div className="p-5 rounded-2xl bg-gradient-to-r from-indigo-950/50 via-slate-900 to-indigo-950/50 border border-indigo-500/20 space-y-3">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2 font-bold text-white text-sm">
-            <ShieldCheck className="w-5 h-5 text-indigo-400" />
+            <ShieldCheck className="w-5 h-5 text-indigo-400 shrink-0" />
             <span>Pemberitahuan Layanan Managed Domain CV EBI (Beda dengan Hostinger)</span>
           </div>
-          <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0 self-start sm:self-auto">
             AMAN &amp; TERJAMIN
           </span>
         </div>
         <p className="text-xs text-slate-300 leading-relaxed">
-          Di Hostinger, pelanggan dibebaskan mengatur DNS sendiri yang sering kali menyebabkan salah pengetikan dan website down. Di <strong>CV EBI</strong>, demi keamanan pelanggan, <strong>Tim Admin (`djogovancy549@gmail.com`) membantu mengonfigurasi DNS, Cloudflare, dan SSL secara gratis setelah pembayaran transfer BRI terverifikasi</strong>. Pelanggan juga dapat memilih mode Pengaturan Mandiri jika ingin mengatur DNS sendiri.
+          Di Hostinger, pelanggan dibebaskan mengatur DNS sendiri yang sering kali menyebabkan salah pengetikan dan website down. Di <strong>CV EBI</strong>, demi keamanan pelanggan, <strong>Tim Admin (`{ADMIN_EMAIL}`) membantu mengonfigurasi DNS, Cloudflare, dan SSL secara gratis setelah pembayaran transfer BRI terverifikasi</strong>. Pelanggan dapat mengonfirmasi pembayaran lewat WA HP <strong>{ADMIN_PHONE}</strong>, email <strong>{ADMIN_EMAIL}</strong>, atau langsung di formulir web admin.
         </p>
       </div>
 
@@ -370,7 +391,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
           <div>
             <h3 className="text-lg font-bold text-white">Standar Keamanan Managed CV EBI</h3>
             <p className="text-xs text-slate-400 mt-1">
-              Setiap domain yang dikelola dilindungi dengan enkripsi berlapis dan proteksi data oleh Tim Admin (`djogovancy549@gmail.com`).
+              Setiap domain yang dikelola dilindungi dengan enkripsi berlapis dan proteksi data oleh Tim Admin (`{ADMIN_EMAIL}`).
             </p>
           </div>
 
@@ -399,9 +420,9 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
               <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center">
                 <Building2 className="w-6 h-6" />
               </div>
-              <h4 className="text-base font-bold text-white">Transfer Resmi BRI</h4>
+              <h4 className="text-base font-bold text-white">Transfer Resmi BRI &amp; Kontak Admin</h4>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Pembayaran diverifikasi langsung oleh Admin ke rekening Bank BRI resmi (4625-01-020206-53-7 a.n. Yanti Yesinta Nenu D.W Nggodji).
+                Pembayaran diverifikasi langsung oleh Admin ke rekening Bank BRI (4625-01-020206-53-7 a.n. Yanti Yesinta Nenu D.W Nggodji). Kontak WA HP <strong>{ADMIN_PHONE}</strong> &amp; Email <strong>{ADMIN_EMAIL}</strong>.
               </p>
             </div>
           </div>

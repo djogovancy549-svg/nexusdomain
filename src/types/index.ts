@@ -92,3 +92,19 @@ export interface GoogleSheetsConfig {
   isSyncing: boolean;
   sheetTitle: string;
 }
+
+export interface PaymentConfirmation {
+  id: string;
+  domainId: string;
+  domainName: string;
+  invoiceNumber: string;
+  amountIDR: number;
+  senderName: string;
+  senderPhone: string;
+  senderBank: string;
+  transferDate: string;
+  notes?: string;
+  status: 'pending' | 'verified' | 'rejected';
+  submittedAt: string;
+}
+

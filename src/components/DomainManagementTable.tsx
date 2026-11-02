@@ -24,14 +24,23 @@ import {
   FileCheck,
   Wifi,
   Cloud,
+  Check,
+  Inbox,
+  UserCheck,
+  Mail,
+  Send,
 } from 'lucide-react';
-import { DomainItem } from '../types';
+import { DomainItem, PaymentConfirmation } from '../types';
 import { calculateRemainingDays, getExpirationStatusLabel } from '../services/googleSheets';
+import { ADMIN_PHONE, ADMIN_EMAIL } from './PaymentInvoiceModal';
 
 interface DomainManagementTableProps {
   domains: DomainItem[];
   currency: 'IDR' | 'USD';
   isAdminView?: boolean;
+  paymentConfirmations?: PaymentConfirmation[];
+  onVerifyConfirmation?: (confirmationId: string, domainId: string) => void;
+  onRejectConfirmation?: (confirmationId: string) => void;
   onOpenDnsModal: (domain: DomainItem) => void;
   onOpenHostingModal: (domain: DomainItem) => void;
   onOpenRenewModal: (domain: DomainItem) => void;
@@ -51,6 +60,9 @@ export const DomainManagementTable: React.FC<DomainManagementTableProps> = ({
   domains,
   currency,
   isAdminView = true,
+  paymentConfirmations = [],
+  onVerifyConfirmation,
+  onRejectConfirmation,
   onOpenDnsModal,
   onOpenHostingModal,
   onOpenRenewModal,
@@ -67,6 +79,7 @@ export const DomainManagementTable: React.FC<DomainManagementTableProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'expiring_soon' | 'expired'>('all');
+  const [showConfirmationsTab, setShowConfirmationsTab] = useState(false);
 
   // Stats calculation
   const totalDomains = domains.length;
@@ -86,6 +99,7 @@ export const DomainManagementTable: React.FC<DomainManagementTableProps> = ({
   }).length;
 
   const dnssecCount = domains.filter((d) => d.dnssecEnabled).length;
+  const pendingConfirmations = paymentConfirmations.filter((c) => c.status === 'pending');
 
   // Total sales revenue calculated
   const totalRevenueIDR = domains.reduce((acc, d) => acc + (d.salePriceIDR || 149000), 0);
@@ -124,20 +138,30 @@ export const DomainManagementTable: React.FC<DomainManagementTableProps> = ({
         <div>
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-              Registrar Management Center
+              Registrar Management Center (Super Admin)
             </span>
-            <span className="text-xs text-slate-400">Mode Penjual Domain &amp; Web Hosting</span>
+            <span className="text-xs text-slate-400">Owner: {ADMIN_EMAIL}</span>
           </div>
           <h2 className="text-lg sm:text-xl font-bold text-white mt-1">
-            Kelola Pelanggan, Batas Waktu, &amp; Sertifikat Kepemilikan Domain
+            Kelola Pelanggan, Verifikasi Pembayaran, &amp; Setting DNS
           </h2>
           <p className="text-xs text-slate-300 mt-0.5">
-            Setiap domain yang Anda jual otomatis diproteksi DNSSEC, SSL TLS 1.3, Whois Shield, dan tersinkronisasi ke Google Sheets.
+            Kontak Resmi Admin HP: <strong className="text-emerald-400 font-mono">{ADMIN_PHONE}</strong> | Email: <strong className="text-indigo-300 font-mono">{ADMIN_EMAIL}</strong>
           </p>
         </div>
 
         <div className="flex items-center gap-3 shrink-0">
-          <div className="bg-slate-950/80 px-4 py-2 rounded-xl border border-slate-800 text-right">
+          {pendingConfirmations.length > 0 && (
+            <button
+              onClick={() => setShowConfirmationsTab(!showConfirmationsTab)}
+              className="px-4 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-black text-xs shadow-lg shadow-amber-500/20 flex items-center gap-2 transition cursor-pointer animate-pulse"
+            >
+              <Inbox className="w-4 h-4" />
+              <span>{pendingConfirmations.length} Konfirmasi Pembayaran Masuk</span>
+            </button>
+          )}
+
+          <div className="bg-slate-950/80 px-4 py-2 rounded-xl border border-slate-800 text-right hidden md:block">
             <span className="text-[10px] text-slate-400 block font-medium">Total Nilai Penjualan</span>
             <span className="text-sm font-extrabold text-emerald-400 font-mono">
               Rp {totalRevenueIDR.toLocaleString('id-ID')}
@@ -153,7 +177,89 @@ export const DomainManagementTable: React.FC<DomainManagementTableProps> = ({
         </div>
       </div>
 
-      {/* Expiration Alert Banner if any domain is expiring in <= 30 days */}
+      {/* Payment Confirmations Inbox Section */}
+      {(showConfirmationsTab || pendingConfirmations.length > 0) && (
+        <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-900 via-indigo-950/50 to-slate-900 border border-amber-500/40 space-y-4 animate-in fade-in">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div className="flex items-center gap-2">
+              <div className="p-2 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                <Inbox className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-base font-extrabold text-white">
+                  Kotak Konfirmasi Pembayaran Masuk ({pendingConfirmations.length})
+                </h3>
+                <p className="text-xs text-slate-400">
+                  Konfirmasi pembayaran dari pelanggan via Web Portal / WhatsApp HP ({ADMIN_PHONE})
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setShowConfirmationsTab(false)}
+              className="text-xs text-slate-400 hover:text-white px-3 py-1 rounded-lg bg-slate-800"
+            >
+              Tutup Panel
+            </button>
+          </div>
+
+          {pendingConfirmations.length === 0 ? (
+            <p className="text-xs text-slate-400 italic py-2">
+              Belum ada konfirmasi pembayaran baru yang menunggu verifikasi.
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {pendingConfirmations.map((conf) => (
+                <div
+                  key={conf.id}
+                  className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3 relative overflow-hidden"
+                >
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <span className="text-[10px] uppercase font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                        {conf.invoiceNumber}
+                      </span>
+                      <h4 className="text-sm font-extrabold text-white font-mono mt-1">
+                        {conf.domainName}
+                      </h4>
+                    </div>
+                    <span className="text-sm font-extrabold text-emerald-400 font-mono">
+                      Rp {conf.amountIDR.toLocaleString('id-ID')}
+                    </span>
+                  </div>
+
+                  <div className="space-y-1 text-xs text-slate-300 bg-slate-900 p-3 rounded-lg border border-slate-800 font-mono">
+                    <div>Pengirim: <strong className="text-white">{conf.senderName}</strong></div>
+                    <div>No HP/WA: <span className="text-emerald-300">{conf.senderPhone}</span></div>
+                    <div>Bank: <span className="text-slate-200">{conf.senderBank}</span> | Tgl: {conf.transferDate}</div>
+                    {conf.notes && <div className="text-[11px] text-slate-400 italic font-sans">Catatan: {conf.notes}</div>}
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-1">
+                    <button
+                      onClick={() => onVerifyConfirmation && onVerifyConfirmation(conf.id, conf.domainId)}
+                      className="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <Check className="w-4 h-4" />
+                      <span>Setujui &amp; Tandai LUNAS</span>
+                    </button>
+                    {onRejectConfirmation && (
+                      <button
+                        onClick={() => onRejectConfirmation(conf.id)}
+                        className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-rose-400 font-semibold text-xs transition cursor-pointer"
+                      >
+                        Tolak
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Expiration Alert Banner */}
       {expiringSoonCount > 0 && (
         <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in fade-in">
           <div className="flex items-center gap-3">
@@ -165,7 +271,7 @@ export const DomainManagementTable: React.FC<DomainManagementTableProps> = ({
                 Pemberitahuan Batas Waktu Kadaluarsa Domain Pelanggan
               </h4>
               <p className="text-xs text-amber-300/80 mt-0.5">
-                Ada <strong>{expiringSoonCount} domain pelanggan</strong> dengan masa berlaku kurang dari 30 hari. Hubungi pembeli via WhatsApp untuk mengirim tagihan perpanjangan.
+                Ada <strong>{expiringSoonCount} domain pelanggan</strong> dengan masa berlaku kurang dari 30 hari. Hubungi pembeli via WhatsApp HP ({ADMIN_PHONE}) untuk mengirim tagihan perpanjangan.
               </p>
             </div>
           </div>

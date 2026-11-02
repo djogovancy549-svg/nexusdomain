@@ -210,7 +210,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 onClick={onOpenAdminAuthModal}
                 className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-sm"
-                title="Masuk sebagai Administrator dengan PIN domain2026"
+                title="Masuk sebagai Administrator"
               >
                 <KeyRound className="w-3.5 h-3.5 text-amber-400" />
                 <span className="hidden sm:inline">Login Admin</span>

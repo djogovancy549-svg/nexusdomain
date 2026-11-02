@@ -6,7 +6,7 @@ import { HostingPackages } from './components/HostingPackages';
 import { DomainManagementTable } from './components/DomainManagementTable';
 import { CustomerDashboard } from './components/CustomerDashboard';
 import { AdminAuthModal, SUPER_ADMIN_EMAIL } from './components/AdminAuthModal';
-import { PaymentInvoiceModal } from './components/PaymentInvoiceModal';
+import { PaymentInvoiceModal, ADMIN_PHONE, ADMIN_EMAIL } from './components/PaymentInvoiceModal';
 import { GoogleSheetsModal } from './components/GoogleSheetsModal';
 import { DnsManagerModal } from './components/DnsManagerModal';
 import { HostingCPanelModal } from './components/HostingCPanelModal';
@@ -25,6 +25,7 @@ import {
   GoogleSheetsConfig,
   DnsRecord,
   HostingPackage,
+  PaymentConfirmation,
 } from './types';
 import {
   INITIAL_DOMAINS,
@@ -56,6 +57,7 @@ const LOCAL_STORAGE_KEY = 'nexahost_domains_clean_v3';
 const LOCAL_STORAGE_LOGS = 'nexahost_logs_clean_v3';
 const LOCAL_STORAGE_SHEET_ID = 'nexahost_sheet_id_v1';
 const LOCAL_STORAGE_WEBHOOK = 'nexahost_webhook_config_v1';
+const LOCAL_STORAGE_CONFIRMATIONS = 'nexahost_confirmations_v1';
 
 // Clear legacy dummy cache so application starts 100% clean
 try {
@@ -93,6 +95,25 @@ export default function App() {
     }
     return INITIAL_SECURITY_LOGS;
   });
+
+  // Payment Confirmations State
+  const [paymentConfirmations, setPaymentConfirmations] = useState<PaymentConfirmation[]>(() => {
+    try {
+      const saved = localStorage.getItem(LOCAL_STORAGE_CONFIRMATIONS);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.warn('Failed to read paymentConfirmations:', e);
+    }
+    return [];
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(LOCAL_STORAGE_CONFIRMATIONS, JSON.stringify(paymentConfirmations));
+    } catch (e) {
+      console.warn('Failed to save paymentConfirmations:', e);
+    }
+  }, [paymentConfirmations]);
 
   // Google Sheets Config
   const [sheetsConfig, setSheetsConfig] = useState<GoogleSheetsConfig>({
@@ -149,7 +170,7 @@ export default function App() {
   const [invoiceModalDomain, setInvoiceModalDomain] = useState<DomainItem | null>(null);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
-  // Strictly enforce Admin view only if authenticated via PIN (domain2026) or Super Admin Google Account
+  // Strictly enforce Admin view only if authenticated via Super Admin PIN or Super Admin Google Account
   useEffect(() => {
     if (isAdminView && !isAdminAuthenticated && currentUser?.email?.toLowerCase() !== SUPER_ADMIN_EMAIL.toLowerCase()) {
       setIsAdminView(false);
@@ -170,7 +191,7 @@ export default function App() {
     }, 4500);
   };
 
-  // Safe Confirmation Modal state (Destructive operations per workspace-integration)
+  // Safe Confirmation Modal state
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
     title: string;
@@ -218,7 +239,6 @@ export default function App() {
         let sheetId = sheetsConfig.spreadsheetId;
         let sheetUrl = sheetsConfig.spreadsheetUrl;
 
-        // If no sheet ID yet, check if there's an existing one or create a new one
         if (!sheetId) {
           const existing = await searchExistingSpreadsheet(token);
           if (existing) {
@@ -238,7 +258,6 @@ export default function App() {
           }));
         }
 
-        // Perform real-time push to Google Sheets
         await syncDataToGoogleSheet(token, sheetId, activeDomains, activeLogs);
 
         const now = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
@@ -299,7 +318,6 @@ export default function App() {
     const unsubscribe = initAuth(
       async (user, token) => {
         setCurrentUser(user);
-        // Automatically check/sync Google Sheet
         try {
           const existing = await searchExistingSpreadsheet(token);
           if (existing) {
@@ -331,7 +349,6 @@ export default function App() {
         setCurrentUser(res.user);
         showToast(`Berhasil masuk sebagai ${res.user.displayName || res.user.email}!`, 'success');
 
-        // Automatically setup spreadsheet
         const existing = await searchExistingSpreadsheet(res.accessToken);
         if (existing) {
           localStorage.setItem(LOCAL_STORAGE_SHEET_ID, existing.id);
@@ -380,6 +397,71 @@ export default function App() {
     setSecurityLogs((prev) => [newLog, ...prev]);
   };
 
+  // Customer Payment Confirmation Submission
+  const handleSubmitPaymentConfirmation = (confirmation: Omit<PaymentConfirmation, 'id' | 'status' | 'submittedAt'>) => {
+    const newConf: PaymentConfirmation = {
+      ...confirmation,
+      id: `CONF-${Date.now().toString().slice(-6)}`,
+      status: 'pending',
+      submittedAt: new Date().toISOString().replace('T', ' ').slice(0, 19),
+    };
+
+    setPaymentConfirmations((prev) => [newConf, ...prev]);
+    addSecurityLog(
+      confirmation.domainName,
+      `Form konfirmasi pembayaran diterima dari ${confirmation.senderName} (${confirmation.senderBank} Rp ${confirmation.amountIDR.toLocaleString('id-ID')}). Menunggu verifikasi admin.`,
+      'info'
+    );
+  };
+
+  // Super Admin Verifies Payment Confirmation
+  const handleVerifyPaymentConfirmation = (confirmationId: string, domainId: string) => {
+    // 1. Mark domain status as paid
+    const updatedDomains = domains.map((d) => {
+      if (d.id === domainId) {
+        return { ...d, paymentStatus: 'paid' as const };
+      }
+      return d;
+    });
+    setDomains(updatedDomains);
+
+    // 2. Mark confirmation as verified
+    const updatedConfs = paymentConfirmations.map((c) => {
+      if (c.id === confirmationId) {
+        return { ...c, status: 'verified' as const };
+      }
+      return c;
+    });
+    setPaymentConfirmations(updatedConfs);
+
+    const confObj = paymentConfirmations.find((c) => c.id === confirmationId);
+    if (confObj) {
+      addSecurityLog(
+        confObj.domainName,
+        `Pembayaran Rp ${confObj.amountIDR.toLocaleString('id-ID')} dari ${confObj.senderName} TELAH DIVERIFIKASI LUNAS OLEH ADMIN (${SUPER_ADMIN_EMAIL}).`,
+        'info'
+      );
+    }
+
+    showToast('Pembayaran berhasil diverifikasi! Status domain kini LUNAS.', 'success');
+
+    if (sheetsConfig.autoSync) {
+      setTimeout(() => triggerGoogleSheetsSync(updatedDomains), 500);
+    }
+  };
+
+  // Super Admin Rejects Payment Confirmation
+  const handleRejectPaymentConfirmation = (confirmationId: string) => {
+    const updatedConfs = paymentConfirmations.map((c) => {
+      if (c.id === confirmationId) {
+        return { ...c, status: 'rejected' as const };
+      }
+      return c;
+    });
+    setPaymentConfirmations(updatedConfs);
+    showToast('Konfirmasi pembayaran ditolak.', 'info');
+  };
+
   // Register new domain & hosting
   const handleRegisterDomain = (newDomain: DomainItem) => {
     const updated = [newDomain, ...domains];
@@ -400,14 +482,12 @@ export default function App() {
       setInvoiceModalDomain(newDomain);
     }
 
-    // If autoSync is enabled, push to Google Sheets immediately
     if (sheetsConfig.autoSync) {
       setTimeout(() => {
         triggerGoogleSheetsSync(updated);
       }, 500);
     }
 
-    // Auto-sync via Webhook Deploy if configured
     if (webhookConfig.autoSyncWebhook && webhookConfig.webhookUrl) {
       setTimeout(() => {
         sendDataToSheetWebhook(webhookConfig.webhookUrl, updated, securityLogs)
@@ -618,7 +698,6 @@ export default function App() {
     const updated = domains.map((d) => {
       if (d.id === domainId) {
         domainName = d.name;
-        // Filter out conflicting A or CNAME records for @ and www
         const filtered = d.dnsRecords.filter(
           (r) =>
             !(
@@ -804,6 +883,9 @@ export default function App() {
             domains={domains}
             currency={currency}
             isAdminView={isAdminView}
+            paymentConfirmations={paymentConfirmations}
+            onVerifyConfirmation={handleVerifyPaymentConfirmation}
+            onRejectConfirmation={handleRejectPaymentConfirmation}
             onOpenDnsModal={(d) => setDnsModalDomain(d)}
             onOpenHostingModal={(d) => setHostingModalDomain(d)}
             onOpenRenewModal={(d) => setRenewModalDomain(d)}
@@ -860,11 +942,11 @@ export default function App() {
             <span>• Penyedia Layanan Domain &amp; Cloud Web Hosting Berkeamanan Tinggi</span>
           </div>
           <div className="flex items-center gap-4 text-slate-400">
-            <span>DNSSEC Enabled</span>
+            <span>Kontak HP: {ADMIN_PHONE}</span>
             <span>•</span>
-            <span>TLS 1.3 Encryption</span>
+            <span>Email: {ADMIN_EMAIL}</span>
             <span>•</span>
-            <span>Google Sheets Expiration Sync</span>
+            <span>DNSSEC &amp; TLS 1.3</span>
           </div>
         </div>
       </footer>
@@ -992,6 +1074,7 @@ export default function App() {
         onClose={() => setInvoiceModalDomain(null)}
         currency={currency}
         showToast={showToast}
+        onSubmitConfirmation={handleSubmitPaymentConfirmation}
       />
     </div>
   );
