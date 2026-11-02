@@ -12,35 +12,45 @@ import {
 import { TLD_PRICING_CATALOG } from '../data/initialData';
 import { DomainItem, TldPricing } from '../types';
 
+import { sanitizeDomainQuery } from '../utils/security';
+
+// Interface
 interface DomainSearchHeroProps {
   existingDomains: DomainItem[];
   currency: 'IDR' | 'USD';
   onSelectRegisterDomain: (domainName: string, tld: string, price: number) => void;
+  onSecurityAlert?: (msg: string) => void;
 }
 
 export const DomainSearchHero: React.FC<DomainSearchHeroProps> = ({
   existingDomains,
   currency,
   onSelectRegisterDomain,
+  onSecurityAlert,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'Indonesia ccTLD' | 'Global' | 'Tech & Business'>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Handle clean domain input (strip protocol, www, spaces, etc.)
+  // Handle clean domain input (strip protocol, www, spaces, etc.) with security validation
   const cleanInput = (val: string) => {
-    return val
-      .toLowerCase()
-      .trim()
-      .replace(/https?:\/\//, '')
-      .replace(/www\./, '')
-      .replace(/[^a-z0-9-.]/g, '');
+    const check = sanitizeDomainQuery(val);
+    if (check.isBlocked) {
+      if (onSecurityAlert && check.threatReason) {
+        onSecurityAlert(check.threatReason);
+      }
+      return '';
+    }
+    return check.sanitized;
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchTerm.trim()) return;
-    setSearchQuery(cleanInput(searchTerm));
+    const sanitized = cleanInput(searchTerm);
+    if (sanitized) {
+      setSearchQuery(sanitized);
+    }
   };
 
   // Base domain keyword

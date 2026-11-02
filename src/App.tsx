@@ -18,6 +18,10 @@ import { DomainOwnershipCertificateModal } from './components/DomainOwnershipCer
 import { DomainReadinessModal } from './components/DomainReadinessModal';
 import { CloudflareDeployModal } from './components/CloudflareDeployModal';
 import { CloudflarePagesConnectModal } from './components/CloudflarePagesConnectModal';
+import { RightClickSecurityModal } from './components/RightClickSecurityModal';
+import { TermsBanner } from './components/TermsBanner';
+import { AdBanner } from './components/AdBanner';
+import { HostingerComparison } from './components/HostingerComparison';
 
 import {
   DomainItem,
@@ -177,6 +181,45 @@ export default function App() {
       setActiveTab('client-portal');
     }
   }, [currentUser, isAdminView, isAdminAuthenticated]);
+
+  // Right-click & DevTools Security Protection State
+  const [isRightClickSecurityOpen, setIsRightClickSecurityOpen] = useState(false);
+  const [securityModalReason, setSecurityModalReason] = useState<string>(
+    'Klik kanan & inspeksi elemen dinonaktifkan demi perlindungan hak cipta data pelanggan, struktur DNS, dan transaksi CV. EBI.'
+  );
+
+  useEffect(() => {
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+      setSecurityModalReason(
+        'Klik kanan dinonaktifkan demi keamanan transaksi, perlindungan struktur DNS, dan hak cipta data pelanggan CV. EBI.'
+      );
+      setIsRightClickSecurityOpen(true);
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Prevent F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+Shift+C
+      if (
+        e.key === 'F12' ||
+        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
+        (e.ctrlKey && (e.key === 'u' || e.key === 'U'))
+      ) {
+        e.preventDefault();
+        setSecurityModalReason(
+          'Akses DevTools dan Inspect Element dibatasi oleh AI Security Shield CV. EBI demi keamanan portal.'
+        );
+        setIsRightClickSecurityOpen(true);
+      }
+    };
+
+    window.addEventListener('contextmenu', handleContextMenu);
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('contextmenu', handleContextMenu);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   // Security scan state
   const [isScanning, setIsScanning] = useState(false);
@@ -862,20 +905,33 @@ export default function App() {
       />
 
       {/* Main Body Content based on Active Tab */}
-      <main className="flex-1">
+      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         {activeTab === 'client-portal' && (
-          <CustomerDashboard
-            domains={domains}
-            tldPricing={TLD_PRICING_CATALOG}
-            currency={currency}
-            onOpenRegisterModal={() => setIsRegisterModalOpen(true)}
-            onOpenDnsModal={(d) => setDnsModalDomain(d)}
-            onOpenHostingModal={(d) => setHostingModalDomain(d)}
-            onOpenRenewModal={(d) => setRenewModalDomain(d)}
-            onOpenCertModal={(d) => setCertModalDomain(d)}
-            onOpenCfPagesModal={(d) => setCfPagesModalDomain(d)}
-            onOpenInvoiceModal={(d) => setInvoiceModalDomain(d)}
-          />
+          <div className="space-y-8">
+            <CustomerDashboard
+              domains={domains}
+              tldPricing={TLD_PRICING_CATALOG}
+              currency={currency}
+              onOpenRegisterModal={() => setIsRegisterModalOpen(true)}
+              onOpenDnsModal={(d) => setDnsModalDomain(d)}
+              onOpenHostingModal={(d) => setHostingModalDomain(d)}
+              onOpenRenewModal={(d) => setRenewModalDomain(d)}
+              onOpenCertModal={(d) => setCertModalDomain(d)}
+              onOpenCfPagesModal={(d) => setCfPagesModalDomain(d)}
+              onOpenInvoiceModal={(d) => setInvoiceModalDomain(d)}
+            />
+            
+            {/* Promo Advertising Banner */}
+            <AdBanner
+              onRegisterClick={(tld) => {
+                setRegisterInitialTld(tld);
+                setIsRegisterModalOpen(true);
+              }}
+            />
+
+            {/* Superiority & Hostinger Comparison Section */}
+            <HostingerComparison />
+          </div>
         )}
 
         {activeTab === 'domains' && (
@@ -903,25 +959,51 @@ export default function App() {
         )}
 
         {activeTab === 'search' && (
-          <DomainSearchHero
-            existingDomains={domains}
-            currency={currency}
-            onSelectRegisterDomain={(name, tldVal) => {
-              setRegisterInitialDomain(name);
-              setRegisterInitialTld(tldVal);
-              setIsRegisterModalOpen(true);
-            }}
-          />
+          <div className="space-y-8">
+            <DomainSearchHero
+              existingDomains={domains}
+              currency={currency}
+              onSelectRegisterDomain={(name, tldVal) => {
+                setRegisterInitialDomain(name);
+                setRegisterInitialTld(tldVal);
+                setIsRegisterModalOpen(true);
+              }}
+              onSecurityAlert={(reason) => {
+                setSecurityModalReason(reason);
+                setIsRightClickSecurityOpen(true);
+              }}
+            />
+
+            <AdBanner
+              onRegisterClick={(tld) => {
+                setRegisterInitialTld(tld);
+                setIsRegisterModalOpen(true);
+              }}
+            />
+
+            <HostingerComparison />
+          </div>
         )}
 
         {activeTab === 'hosting' && (
-          <HostingPackages
-            currency={currency}
-            onSelectPackage={(pkg) => {
-              setRegisterInitialPkg(pkg.id);
-              setIsRegisterModalOpen(true);
-            }}
-          />
+          <div className="space-y-8">
+            <HostingPackages
+              currency={currency}
+              onSelectPackage={(pkg) => {
+                setRegisterInitialPkg(pkg.id);
+                setIsRegisterModalOpen(true);
+              }}
+            />
+
+            <AdBanner
+              onRegisterClick={(tld) => {
+                setRegisterInitialTld(tld);
+                setIsRegisterModalOpen(true);
+              }}
+            />
+
+            <HostingerComparison />
+          </div>
         )}
 
         {activeTab === 'security' && (
@@ -1081,6 +1163,16 @@ export default function App() {
         showToast={showToast}
         onSubmitConfirmation={handleSubmitPaymentConfirmation}
       />
+
+      {/* Right-Click & DevTools Anti-Exploit Security Modal */}
+      <RightClickSecurityModal
+        isOpen={isRightClickSecurityOpen}
+        onClose={() => setIsRightClickSecurityOpen(false)}
+        reason={securityModalReason}
+      />
+
+      {/* Terms & Conditions Sticky Consent Banner */}
+      <TermsBanner />
     </div>
   );
 }
