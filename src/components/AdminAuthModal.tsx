@@ -9,6 +9,8 @@ import {
   Mail,
   User,
   Sparkles,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 import { User as FirebaseUser } from 'firebase/auth';
 
@@ -31,6 +33,7 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
   onGoogleSignIn,
 }) => {
   const [pin, setPin] = useState('');
+  const [showPin, setShowPin] = useState(false);
   const [error, setError] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -123,7 +126,7 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
               <div className="relative">
                 <KeyRound className="w-5 h-5 text-amber-400 absolute left-3.5 top-3.5" />
                 <input
-                  type="password"
+                  type={showPin ? 'text' : 'password'}
                   value={pin}
                   onChange={(e) => {
                     setPin(e.target.value);
@@ -131,8 +134,21 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
                   }}
                   placeholder="Masukkan PIN Super Admin"
                   autoFocus
-                  className="w-full pl-11 pr-4 py-3.5 bg-slate-950 border border-amber-500/40 rounded-xl text-white text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition font-mono tracking-widest placeholder:tracking-normal placeholder:text-slate-600"
+                  className="w-full pl-11 pr-11 py-3.5 bg-slate-950 border border-amber-500/40 rounded-xl text-white text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition font-mono tracking-widest placeholder:tracking-normal placeholder:text-slate-600"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPin(!showPin)}
+                  className="absolute right-3.5 top-3.5 text-slate-400 hover:text-amber-400 transition cursor-pointer p-0.5 rounded"
+                  title={showPin ? 'Sembunyikan PIN' : 'Tampilkan PIN'}
+                  aria-label={showPin ? 'Sembunyikan PIN' : 'Tampilkan PIN'}
+                >
+                  {showPin ? (
+                    <EyeOff className="w-5 h-5 text-amber-400" />
+                  ) : (
+                    <Eye className="w-5 h-5 text-slate-400 hover:text-amber-300" />
+                  )}
+                </button>
               </div>
 
               {error && (
