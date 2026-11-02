@@ -39,9 +39,17 @@ import {
 } from './services/googleSheets';
 import { CheckCircle2, AlertCircle, FileSpreadsheet, ExternalLink, X } from 'lucide-react';
 
-const LOCAL_STORAGE_KEY = 'nexahost_domains_data_v1';
-const LOCAL_STORAGE_LOGS = 'nexahost_logs_data_v1';
+const LOCAL_STORAGE_KEY = 'nexahost_domains_clean_v3';
+const LOCAL_STORAGE_LOGS = 'nexahost_logs_clean_v3';
 const LOCAL_STORAGE_SHEET_ID = 'nexahost_sheet_id_v1';
+
+// Clear legacy dummy cache so application starts 100% clean
+try {
+  localStorage.removeItem('nexahost_domains_data_v1');
+  localStorage.removeItem('nexahost_logs_data_v1');
+} catch (e) {
+  // Ignore in restricted environments
+}
 
 export default function App() {
   // Navigation & Core States
@@ -50,7 +58,7 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-  // Domains & Logs State
+  // Domains & Logs State (Fresh and empty)
   const [domains, setDomains] = useState<DomainItem[]>(() => {
     try {
       const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -58,7 +66,7 @@ export default function App() {
     } catch (e) {
       console.warn('Failed to read localStorage:', e);
     }
-    return INITIAL_DOMAINS;
+    return [];
   });
 
   const [securityLogs, setSecurityLogs] = useState<SecurityLog[]>(() => {
@@ -68,7 +76,7 @@ export default function App() {
     } catch (e) {
       console.warn('Failed to read logs:', e);
     }
-    return INITIAL_SECURITY_LOGS;
+    return [];
   });
 
   // Google Sheets Config

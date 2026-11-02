@@ -317,10 +317,34 @@ export const DomainManagementTable: React.FC<DomainManagementTableProps> = ({
       {/* Domain Cards & Table List */}
       <div className="space-y-3.5">
         {filteredDomains.length === 0 ? (
-          <div className="p-12 text-center rounded-2xl bg-slate-900/50 border border-slate-800 text-slate-400">
-            <Globe className="w-10 h-10 mx-auto text-slate-600 mb-3" />
-            <p className="text-sm font-semibold text-slate-300">Tidak ada domain yang cocok dengan kriteria pencarian.</p>
-            <p className="text-xs text-slate-500 mt-1">Coba ubah kata kunci atau ganti status filter di atas.</p>
+          <div className="p-12 sm:p-16 text-center rounded-3xl bg-slate-900/60 border border-slate-800 text-slate-400 space-y-4">
+            <div className="w-16 h-16 rounded-2xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center justify-center mx-auto shadow-inner">
+              <Globe className="w-8 h-8" />
+            </div>
+            <div className="max-w-md mx-auto">
+              <h3 className="text-lg font-bold text-white">
+                Database Domain Bersih &amp; Siap Digunakan
+              </h3>
+              <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                Semua data dummy telah dibersihkan. Aplikasi sekarang dalam status baru dan kosong. Mulai terbitkan dan alokasikan domain resmi pertama Anda kepada pelanggan!
+              </p>
+            </div>
+            <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+              <button
+                onClick={onOpenRegisterModal}
+                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 flex items-center gap-2 cursor-pointer transition"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Terbitkan Domain Pertama Anda</span>
+              </button>
+              <button
+                onClick={onOpenSheetsModal}
+                className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold text-xs border border-slate-700 flex items-center gap-2 cursor-pointer transition"
+              >
+                <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
+                <span>Buka Google Sheets Sync</span>
+              </button>
+            </div>
           </div>
         ) : (
           filteredDomains.map((domain) => {

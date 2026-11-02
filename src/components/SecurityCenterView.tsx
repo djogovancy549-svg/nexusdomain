@@ -214,32 +214,44 @@ export const SecurityCenterView: React.FC<SecurityCenterViewProps> = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/70 font-mono">
-              {filteredLogs.map((log) => (
-                <tr key={log.id} className="hover:bg-slate-900/40">
-                  <td className="px-4 py-3 text-slate-400 text-[11px] whitespace-nowrap">{log.timestamp}</td>
-                  <td className="px-4 py-3 font-bold text-white">{log.domain}</td>
-                  <td className="px-4 py-3 font-sans text-slate-200">{log.event}</td>
-                  <td className="px-4 py-3 text-slate-400">{log.ip}</td>
-                  <td className="px-4 py-3 font-sans">
-                    <span
-                      className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                        log.severity === 'danger'
-                          ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
-                          : log.severity === 'warning'
-                          ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-                          : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                      }`}
-                    >
-                      {log.severity}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-right font-sans">
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">
-                      {log.status}
-                    </span>
+              {filteredLogs.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-4 py-10 text-center text-slate-500 font-sans text-xs">
+                    <ShieldCheck className="w-8 h-8 mx-auto text-slate-600 mb-2" />
+                    <p className="font-semibold text-slate-400">Belum ada peristiwa keamanan tercatat.</p>
+                    <p className="text-[11px] text-slate-500 mt-0.5">
+                      Log audit akan otomatis terisi saat domain baru diterbitkan, DNS diperbarui, atau sertifikat SSL diterbitkan.
+                    </p>
                   </td>
                 </tr>
-              ))}
+              ) : (
+                filteredLogs.map((log) => (
+                  <tr key={log.id} className="hover:bg-slate-900/40">
+                    <td className="px-4 py-3 text-slate-400 text-[11px] whitespace-nowrap">{log.timestamp}</td>
+                    <td className="px-4 py-3 font-bold text-white">{log.domain}</td>
+                    <td className="px-4 py-3 font-sans text-slate-200">{log.event}</td>
+                    <td className="px-4 py-3 text-slate-400">{log.ip}</td>
+                    <td className="px-4 py-3 font-sans">
+                      <span
+                        className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                          log.severity === 'danger'
+                            ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+                            : log.severity === 'warning'
+                            ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                            : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                        }`}
+                      >
+                        {log.severity}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-right font-sans">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">
+                        {log.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
