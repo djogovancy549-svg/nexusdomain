@@ -1,0 +1,6 @@
+{
+  "name": "NexaHost - Domain & Cloud Web Hosting",
+  "description": "Platform penyedia layanan domain dan hosting profesional berkeamanan tinggi dengan manajemen DNS, SSL, DNSSEC, dan sinkronisasi database Google Sheets otomatis.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
