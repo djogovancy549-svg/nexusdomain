@@ -140,13 +140,13 @@ export const DomainManagementTable: React.FC<DomainManagementTableProps> = ({
             <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
               Registrar Management Center (Super Admin)
             </span>
-            <span className="text-xs text-slate-400">Owner: {ADMIN_EMAIL}</span>
+            <span className="text-xs text-slate-400">Owner: Super Admin</span>
           </div>
           <h2 className="text-lg sm:text-xl font-bold text-white mt-1">
             Kelola Pelanggan, Verifikasi Pembayaran, &amp; Setting DNS
           </h2>
           <p className="text-xs text-slate-300 mt-0.5">
-            Kontak Resmi Admin HP: <strong className="text-emerald-400 font-mono">{ADMIN_PHONE}</strong> | Email: <strong className="text-indigo-300 font-mono">{ADMIN_EMAIL}</strong>
+            Kontak Resmi Admin HP: <strong className="text-emerald-400 font-mono">{ADMIN_PHONE}</strong> | Portal Admin Verified
           </p>
         </div>
 

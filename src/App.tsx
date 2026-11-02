@@ -438,7 +438,7 @@ export default function App() {
     if (confObj) {
       addSecurityLog(
         confObj.domainName,
-        `Pembayaran Rp ${confObj.amountIDR.toLocaleString('id-ID')} dari ${confObj.senderName} TELAH DIVERIFIKASI LUNAS OLEH ADMIN (${SUPER_ADMIN_EMAIL}).`,
+        `Pembayaran Rp ${confObj.amountIDR.toLocaleString('id-ID')} dari ${confObj.senderName} TELAH DIVERIFIKASI LUNAS OLEH ADMIN.`,
         'info'
       );
     }
@@ -944,7 +944,12 @@ export default function App() {
           <div className="flex items-center gap-4 text-slate-400">
             <span>Kontak HP: {ADMIN_PHONE}</span>
             <span>•</span>
-            <span>Email: {ADMIN_EMAIL}</span>
+            <a
+              href={`mailto:${ADMIN_EMAIL}?subject=Tanya%20Admin%20CV%20EBI`}
+              className="hover:text-indigo-300 transition cursor-pointer font-semibold text-slate-300"
+            >
+              Hubungi Email Admin
+            </a>
             <span>•</span>
             <span>DNSSEC &amp; TLS 1.3</span>
           </div>

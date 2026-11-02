@@ -246,7 +246,12 @@ export const PaymentInvoiceModal: React.FC<PaymentInvoiceModalProps> = ({
                     <Mail className="w-4 h-4 text-indigo-400 shrink-0" />
                     <div>
                       <span className="text-[10px] text-slate-500 block">Email Resmi Admin</span>
-                      <span className="text-indigo-300 font-bold truncate block">{ADMIN_EMAIL}</span>
+                      <button
+                        onClick={handleSendEmailConfirmation}
+                        className="text-indigo-300 hover:text-indigo-200 font-bold text-xs flex items-center gap-1 cursor-pointer"
+                      >
+                        <span>Hubungi via Email</span>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -291,7 +296,7 @@ export const PaymentInvoiceModal: React.FC<PaymentInvoiceModalProps> = ({
                   </div>
                   <h4 className="text-base font-extrabold text-white">Konfirmasi Berhasil Dikirim!</h4>
                   <p className="text-xs text-emerald-200 leading-relaxed max-w-sm mx-auto">
-                    Data pembayaran Anda telah masuk ke dashboard Web Admin. Admin (<strong>{ADMIN_EMAIL}</strong>) akan memverifikasi dan mengubah status domain <strong>{domain.name}</strong> menjadi LUNAS.
+                    Data pembayaran Anda telah masuk ke dashboard Web Admin. Admin akan memverifikasi dan mengubah status domain <strong>{domain.name}</strong> menjadi LUNAS.
                   </p>
                   <button
                     onClick={() => setIsSubmitted(false)}

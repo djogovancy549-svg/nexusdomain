@@ -93,7 +93,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
               Selamat Datang di Dashboard Pelanggan
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
-              Layanan managed domain &amp; cloud hosting profesional oleh Tim CV EBI. Transfer pembayaran ke Bank BRI resmi dan konfirmasi via HP (<strong className="text-emerald-400 font-mono">{ADMIN_PHONE}</strong>), Email (<strong className="text-indigo-300 font-mono">{ADMIN_EMAIL}</strong>), atau langsung di Web Admin portal.
+              Layanan managed domain &amp; cloud hosting profesional oleh Tim CV EBI. Transfer pembayaran ke Bank BRI resmi dan konfirmasi via HP (<strong className="text-emerald-400 font-mono">{ADMIN_PHONE}</strong>), Email Admin, atau langsung di Web Admin portal.
             </p>
           </div>
 
@@ -104,6 +104,13 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
             >
               <MessageSquare className="w-4 h-4 text-emerald-400" />
               <span>Kontak WA {ADMIN_PHONE}</span>
+            </button>
+            <button
+              onClick={handleGeneralEmail}
+              className="px-4 py-3 rounded-2xl bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 font-bold text-xs transition flex items-center gap-2 cursor-pointer"
+            >
+              <Mail className="w-4 h-4 text-indigo-400" />
+              <span>Email Admin</span>
             </button>
             <button
               onClick={onOpenRegisterModal}
@@ -128,7 +135,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
           </span>
         </div>
         <p className="text-xs text-slate-300 leading-relaxed">
-          Di Hostinger, pelanggan dibebaskan mengatur DNS sendiri yang sering kali menyebabkan salah pengetikan dan website down. Di <strong>CV EBI</strong>, demi keamanan pelanggan, <strong>Tim Admin (`{ADMIN_EMAIL}`) membantu mengonfigurasi DNS, Cloudflare, dan SSL secara gratis setelah pembayaran transfer BRI terverifikasi</strong>. Pelanggan dapat mengonfirmasi pembayaran lewat WA HP <strong>{ADMIN_PHONE}</strong>, email <strong>{ADMIN_EMAIL}</strong>, atau langsung di formulir web admin.
+          Di Hostinger, pelanggan dibebaskan mengatur DNS sendiri yang sering kali menyebabkan salah pengetikan dan website down. Di <strong>CV EBI</strong>, demi keamanan pelanggan, <strong>Tim Admin membantu mengonfigurasi DNS, Cloudflare, dan SSL secara gratis setelah pembayaran transfer BRI terverifikasi</strong>. Pelanggan dapat mengonfirmasi pembayaran lewat WA HP <strong>{ADMIN_PHONE}</strong>, tombol email admin, atau langsung di formulir web admin.
         </p>
       </div>
 
@@ -391,7 +398,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
           <div>
             <h3 className="text-lg font-bold text-white">Standar Keamanan Managed CV EBI</h3>
             <p className="text-xs text-slate-400 mt-1">
-              Setiap domain yang dikelola dilindungi dengan enkripsi berlapis dan proteksi data oleh Tim Admin (`{ADMIN_EMAIL}`).
+              Setiap domain yang dikelola dilindungi dengan enkripsi berlapis dan proteksi data oleh Tim Admin CV EBI.
             </p>
           </div>
 
@@ -422,7 +429,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
               </div>
               <h4 className="text-base font-bold text-white">Transfer Resmi BRI &amp; Kontak Admin</h4>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Pembayaran diverifikasi langsung oleh Admin ke rekening Bank BRI (4625-01-020206-53-7 a.n. Yanti Yesinta Nenu D.W Nggodji). Kontak WA HP <strong>{ADMIN_PHONE}</strong> &amp; Email <strong>{ADMIN_EMAIL}</strong>.
+                Pembayaran diverifikasi langsung oleh Admin ke rekening Bank BRI (4625-01-020206-53-7 a.n. Yanti Yesinta Nenu D.W Nggodji). Kontak WA HP <strong>{ADMIN_PHONE}</strong> &amp; Layanan Email Admin.
               </p>
             </div>
           </div>

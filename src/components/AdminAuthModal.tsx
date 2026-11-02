@@ -79,7 +79,7 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
             </div>
             <h3 className="text-2xl font-extrabold text-white">Otentikasi Super Admin</h3>
             <p className="text-xs text-slate-400 leading-relaxed max-w-xs">
-              Area ini khusus Pemilik Email <strong className="text-amber-300 font-mono">{SUPER_ADMIN_EMAIL}</strong> atau pemegang Kode PIN Super Admin.
+              Area otentikasi khusus Super Admin atau pemegang Kode PIN Super Admin.
             </p>
           </div>
 
@@ -176,7 +176,7 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
               className="w-full py-2.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-300 font-semibold text-xs border border-slate-800 transition flex items-center justify-center gap-2 cursor-pointer"
             >
               <User className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Login Google Akun ({SUPER_ADMIN_EMAIL})</span>
+              <span>Login Akun Google Admin</span>
             </button>
           </div>
         </div>
