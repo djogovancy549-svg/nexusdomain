@@ -4,6 +4,7 @@ import { Navbar } from './components/Navbar';
 import { DomainSearchHero } from './components/DomainSearchHero';
 import { HostingPackages } from './components/HostingPackages';
 import { DomainManagementTable } from './components/DomainManagementTable';
+import { CustomerDashboard } from './components/CustomerDashboard';
 import { GoogleSheetsModal } from './components/GoogleSheetsModal';
 import { DnsManagerModal } from './components/DnsManagerModal';
 import { HostingCPanelModal } from './components/HostingCPanelModal';
@@ -26,6 +27,7 @@ import {
 import {
   INITIAL_DOMAINS,
   INITIAL_SECURITY_LOGS,
+  TLD_PRICING_CATALOG,
 } from './data/initialData';
 import {
   initAuth,
@@ -63,7 +65,8 @@ try {
 
 export default function App() {
   // Navigation & Core States
-  const [activeTab, setActiveTab] = useState<'domains' | 'search' | 'hosting' | 'security' | 'sheets'>('domains');
+  const [activeTab, setActiveTab] = useState<'domains' | 'search' | 'hosting' | 'security' | 'sheets' | 'client-portal'>('client-portal');
+  const [isAdminView, setIsAdminView] = useState(false);
   const [currency, setCurrency] = useState<'IDR' | 'USD'>('IDR');
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -740,6 +743,8 @@ export default function App() {
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
+        isAdminView={isAdminView}
+        setIsAdminView={setIsAdminView}
         currentUser={currentUser}
         sheetsConfig={sheetsConfig}
         webhookConfig={webhookConfig}
@@ -756,6 +761,20 @@ export default function App() {
 
       {/* Main Body Content based on Active Tab */}
       <main className="flex-1">
+        {activeTab === 'client-portal' && (
+          <CustomerDashboard
+            domains={domains}
+            tldPricing={TLD_PRICING_CATALOG}
+            currency={currency}
+            onOpenRegisterModal={() => setIsRegisterModalOpen(true)}
+            onOpenDnsModal={(d) => setDnsModalDomain(d)}
+            onOpenHostingModal={(d) => setHostingModalDomain(d)}
+            onOpenRenewModal={(d) => setRenewModalDomain(d)}
+            onOpenCertModal={(d) => setCertModalDomain(d)}
+            onOpenCfPagesModal={(d) => setCfPagesModalDomain(d)}
+          />
+        )}
+
         {activeTab === 'domains' && (
           <DomainManagementTable
             domains={domains}
