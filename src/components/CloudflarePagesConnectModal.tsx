@@ -168,7 +168,7 @@ export const CloudflarePagesConnectModal: React.FC<CloudflarePagesConnectModalPr
           {/* DNS Records Comparison Table */}
           <div className="space-y-3">
             <h4 className="text-xs font-bold text-slate-300 flex items-center justify-between">
-              <span>Konfigurasi Record DNS yang Diterapkan di EbiDomain:</span>
+              <span>Konfigurasi Record DNS yang Diterapkan di NageDomain:</span>
               <span className="text-[11px] text-slate-400 font-normal">TTL: 3600 (Auto)</span>
             </h4>
 
@@ -329,13 +329,30 @@ export const CloudflarePagesConnectModal: React.FC<CloudflarePagesConnectModalPr
                 </div>
                 <div className="flex-1">
                   <strong className="text-white block font-semibold">
-                    Aktivasi &amp; SSL/TLS Otomatis (Aktif dalam 5-15 Menit)
+                    Aktivasi &amp; SSL/TLS Otomatis (Aktif dalam 15 Menit - 2 Jam)
                   </strong>
                   <p className="text-slate-400 text-[11px] mt-0.5">
                     Cloudflare Pages akan memverifikasi CNAME DNS secara otomatis dan menerbitkan Sertifikat SSL Universal (HTTPS). Status akan berubah menjadi <span className="text-emerald-400 font-bold">Active</span>.
                   </p>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Cloudflare "Pending Status" Reassurance Notice Box */}
+          <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-2 text-xs">
+            <div className="flex items-center gap-2 text-amber-300 font-bold">
+              <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
+              <span>PENTING: Jika Status di Cloudflare Masih "Pending" (Menunggu)</span>
+            </div>
+            <p className="text-slate-300 leading-relaxed text-[11px]">
+              Jangan khawatir jika Cloudflare menampilkan pesan <strong>"sipermas.com is pending..."</strong>. Konfigurasi CNAME yang Anda pasang sudah <strong>100% BENAR</strong>! Status pending terjadi hanya karena proses **Propagasi DNS Global** (penyebaran data server DNS di seluruh dunia) yang membutuhkan waktu sekitar <strong>15 menit hingga 1-2 jam</strong>. Anda tidak perlu menunggu sampai besok!
+            </p>
+            <div className="pt-2 flex flex-wrap items-center gap-2 text-[11px]">
+              <span className="text-slate-400 font-bold">Tips Mempercepat:</span>
+              <span className="px-2.5 py-1 rounded bg-slate-950 text-amber-200 border border-amber-500/20 font-mono">
+                Buka tab Overview di Cloudflare &gt; Klik "Check nameservers now"
+              </span>
             </div>
           </div>
 
