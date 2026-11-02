@@ -23,11 +23,13 @@ import {
   MessageSquare,
   Send,
 } from 'lucide-react';
+import { User } from 'firebase/auth';
 import { DomainItem, TldPricing } from '../types';
 import { ADMIN_PHONE, ADMIN_PHONE_WA, ADMIN_EMAIL } from './PaymentInvoiceModal';
 
 interface CustomerDashboardProps {
   domains: DomainItem[];
+  currentUser?: User | null;
   tldPricing: TldPricing[];
   currency: 'IDR' | 'USD';
   onOpenRegisterModal: () => void;
@@ -41,6 +43,7 @@ interface CustomerDashboardProps {
 
 export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
   domains,
+  currentUser,
   tldPricing,
   currency,
   onOpenRegisterModal,
@@ -54,6 +57,29 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('annual');
   const [activeSubTab, setActiveSubTab] = useState<'domains' | 'billing' | 'security'>('domains');
 
+  // Multi-tenant email isolation state
+  const [customerEmailInput, setCustomerEmailInput] = useState<string>(() => {
+    return currentUser?.email || 'admin@sipermas.com';
+  });
+
+  // Sync if Google auth user changes
+  React.useEffect(() => {
+    if (currentUser?.email) {
+      setCustomerEmailInput(currentUser.email);
+    }
+  }, [currentUser?.email]);
+
+  // List of unique customer emails for quick demo switching
+  const uniqueCustomerEmails = Array.from(
+    new Set(domains.map((d) => d.clientEmail?.trim()).filter(Boolean))
+  ) as string[];
+
+  // Strict domain filter per customer email for privacy
+  const myCustomerDomains = domains.filter((d) => {
+    if (!customerEmailInput.trim()) return false;
+    return d.clientEmail?.trim().toLowerCase() === customerEmailInput.trim().toLowerCase();
+  });
+
   // Format currency
   const formatMoney = (idrAmount: number, usdAmount: number) => {
     if (currency === 'USD') {
@@ -64,9 +90,9 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
     return `Rp ${amount.toLocaleString('id-ID')} /${billingCycle === 'monthly' ? 'bln' : 'thn'}`;
   };
 
-  const activeDomainsCount = domains.filter((d) => d.status === 'active').length;
-  const sslActiveCount = domains.filter((d) => d.sslStatus === 'active').length;
-  const dnssecCount = domains.filter((d) => d.dnssecEnabled).length;
+  const activeDomainsCount = myCustomerDomains.filter((d) => d.status === 'active').length;
+  const sslActiveCount = myCustomerDomains.filter((d) => d.sslStatus === 'active').length;
+  const dnssecCount = myCustomerDomains.filter((d) => d.dnssecEnabled).length;
 
   const handleGeneralWhatsapp = () => {
     const text = encodeURIComponent(`Halo Admin NageDomain (${ADMIN_PHONE}), saya ingin bertanya tentang pendaftaran domain & hosting.`);
@@ -139,6 +165,64 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
         </p>
       </div>
 
+      {/* Multi-Tenant Privacy & Email Filter Bar */}
+      <div className="p-5 rounded-2xl bg-slate-900/90 border border-indigo-500/30 shadow-xl space-y-3">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center shrink-0 mt-0.5">
+              <Lock className="w-5 h-5 text-emerald-400" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h4 className="text-sm font-bold text-white">Verifikasi Identitas Email Akun Pelanggan</h4>
+                <span className="text-[10px] uppercase font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                  🔒 Isolasi Privasi Aktif
+                </span>
+              </div>
+              <p className="text-xs text-slate-300 mt-0.5 max-w-2xl">
+                Demi keamanan &amp; kerahasiaan data, portal pelanggan hanya menampilkan domain yang dibeli oleh email terdaftar milik Anda. Domain milik pelanggan lain tersembunyi secara otomatis.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 shrink-0">
+            <div className="relative">
+              <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="email"
+                value={customerEmailInput}
+                onChange={(e) => setCustomerEmailInput(e.target.value)}
+                placeholder="Masukkan email akun Anda..."
+                className="pl-9 pr-3.5 py-2 bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl text-xs text-white placeholder-slate-500 font-mono focus:outline-none w-full sm:w-64"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Demo Quick Switcher for Testing Different Customer Accounts */}
+        {uniqueCustomerEmails.length > 0 && (
+          <div className="pt-2 border-t border-slate-800/80 flex items-center gap-2 flex-wrap text-xs">
+            <span className="text-[11px] text-slate-400 font-medium">Uji Privasi Akun Terdaftar:</span>
+            {uniqueCustomerEmails.map((email) => (
+              <button
+                key={email}
+                onClick={() => setCustomerEmailInput(email)}
+                className={`px-2.5 py-1 rounded-lg text-[11px] font-mono transition cursor-pointer flex items-center gap-1 ${
+                  customerEmailInput.toLowerCase() === email.toLowerCase()
+                    ? 'bg-amber-500 text-slate-950 font-bold shadow'
+                    : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/60'
+                }`}
+              >
+                <span>{email}</span>
+                {customerEmailInput.toLowerCase() === email.toLowerCase() && (
+                  <CheckCircle2 className="w-3 h-3 text-slate-950" />
+                )}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* Quick Metrics Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-lg space-y-2">
@@ -149,7 +233,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
           <div className="text-3xl font-extrabold text-white">{activeDomainsCount}</div>
           <p className="text-xs text-emerald-400 flex items-center gap-1">
             <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>Semua terkelola aman</span>
+            <span>Milik {customerEmailInput || 'Pelanggan'}</span>
           </p>
         </div>
 
@@ -215,7 +299,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
           }`}
         >
           <Globe className="w-4 h-4" />
-          <span>Domain Saya ({domains.length})</span>
+          <span>Domain Saya ({myCustomerDomains.length})</span>
         </button>
 
         <button
@@ -247,16 +331,43 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
       {activeSubTab === 'domains' && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-bold text-white">Daftar Domain Milik Anda</h3>
-            <span className="text-xs text-slate-400 font-mono">Total {domains.length} Domain terdaftar</span>
+            <div>
+              <h3 className="text-lg font-bold text-white">Daftar Domain Milik Anda</h3>
+              <p className="text-xs text-slate-400">
+                Terhubung dengan email: <span className="text-amber-300 font-mono">{customerEmailInput || 'Semua Email'}</span>
+              </p>
+            </div>
+            <span className="text-xs text-slate-400 font-mono">
+              Total {myCustomerDomains.length} Domain terdaftar untuk email ini
+            </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {domains.map((dom) => (
-              <div
-                key={dom.id}
-                className="p-6 rounded-2xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition shadow-xl space-y-4"
+          {myCustomerDomains.length === 0 ? (
+            <div className="p-8 rounded-2xl bg-slate-900/60 border border-slate-800 text-center space-y-4">
+              <div className="w-14 h-14 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center mx-auto border border-slate-700">
+                <Globe className="w-7 h-7 text-amber-400" />
+              </div>
+              <div className="space-y-1">
+                <h4 className="text-base font-bold text-white">Tidak Ada Domain Terdaftar Untuk Email Ini</h4>
+                <p className="text-xs text-slate-300 max-w-md mx-auto">
+                  Sistem tidak menemukan transaksi domain yang terdaftar atas email <strong className="text-amber-300 font-mono">{customerEmailInput}</strong>. Pastikan email yang Anda masukkan sesuai, atau daftarkan domain baru.
+                </p>
+              </div>
+              <button
+                onClick={onOpenRegisterModal}
+                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs transition inline-flex items-center gap-2 cursor-pointer shadow-lg shadow-amber-500/20"
               >
+                <Globe className="w-4 h-4" />
+                <span>Daftar Domain Baru Sekarang</span>
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {myCustomerDomains.map((dom) => (
+                <div
+                  key={dom.id}
+                  className="p-6 rounded-2xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition shadow-xl space-y-4"
+                >
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
@@ -319,9 +430,10 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
                     <span>Perpanjang</span>
                   </button>
                 </div>
-              </div>
-            ))}
-          </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

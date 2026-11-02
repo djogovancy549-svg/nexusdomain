@@ -910,6 +910,7 @@ export default function App() {
           <div className="space-y-8">
             <CustomerDashboard
               domains={domains}
+              currentUser={currentUser}
               tldPricing={TLD_PRICING_CATALOG}
               currency={currency}
               onOpenRegisterModal={() => setIsRegisterModalOpen(true)}
