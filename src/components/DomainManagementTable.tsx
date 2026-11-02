@@ -22,6 +22,7 @@ import {
   DollarSign,
   Phone,
   FileCheck,
+  Wifi,
 } from 'lucide-react';
 import { DomainItem } from '../types';
 import { calculateRemainingDays, getExpirationStatusLabel } from '../services/googleSheets';
@@ -33,6 +34,7 @@ interface DomainManagementTableProps {
   onOpenHostingModal: (domain: DomainItem) => void;
   onOpenRenewModal: (domain: DomainItem) => void;
   onOpenCertificateModal: (domain: DomainItem) => void;
+  onOpenReadinessModal: (domain: DomainItem) => void;
   onToggleAutoRenew: (domainId: string) => void;
   onToggleWhoisPrivacy: (domainId: string) => void;
   onToggleDnssec: (domainId: string) => void;
@@ -49,6 +51,7 @@ export const DomainManagementTable: React.FC<DomainManagementTableProps> = ({
   onOpenHostingModal,
   onOpenRenewModal,
   onOpenCertificateModal,
+  onOpenReadinessModal,
   onToggleAutoRenew,
   onToggleWhoisPrivacy,
   onToggleDnssec,
@@ -515,7 +518,17 @@ export const DomainManagementTable: React.FC<DomainManagementTableProps> = ({
                       className="px-3 py-2 rounded-xl text-xs font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 transition flex items-center gap-1.5 cursor-pointer"
                     >
                       <Award className="w-3.5 h-3.5 text-amber-400" />
-                      <span>Sertifikat Pembeli</span>
+                      <span>Sertifikat</span>
+                    </button>
+
+                    {/* Test Web Readiness */}
+                    <button
+                      onClick={() => onOpenReadinessModal(domain)}
+                      title="Uji kesiapan teknis domain dan koneksi ke web hosting publik"
+                      className="px-3 py-2 rounded-xl text-xs font-semibold bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 transition flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <Wifi className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Uji Web</span>
                     </button>
 
                     {/* Renew Button */}

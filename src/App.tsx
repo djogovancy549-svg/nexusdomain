@@ -12,6 +12,7 @@ import { RenewDomainModal } from './components/RenewDomainModal';
 import { SecurityCenterView } from './components/SecurityCenterView';
 import { ConfirmationModal } from './components/ConfirmationModal';
 import { DomainOwnershipCertificateModal } from './components/DomainOwnershipCertificateModal';
+import { DomainReadinessModal } from './components/DomainReadinessModal';
 
 import {
   DomainItem,
@@ -134,6 +135,7 @@ export default function App() {
   const [hostingModalDomain, setHostingModalDomain] = useState<DomainItem | null>(null);
   const [renewModalDomain, setRenewModalDomain] = useState<DomainItem | null>(null);
   const [certModalDomain, setCertModalDomain] = useState<DomainItem | null>(null);
+  const [readinessModalDomain, setReadinessModalDomain] = useState<DomainItem | null>(null);
 
   // Security scan state
   const [isScanning, setIsScanning] = useState(false);
@@ -712,6 +714,7 @@ export default function App() {
             onOpenHostingModal={(d) => setHostingModalDomain(d)}
             onOpenRenewModal={(d) => setRenewModalDomain(d)}
             onOpenCertificateModal={(d) => setCertModalDomain(d)}
+            onOpenReadinessModal={(d) => setReadinessModalDomain(d)}
             onToggleAutoRenew={handleToggleAutoRenew}
             onToggleWhoisPrivacy={handleToggleWhoisPrivacy}
             onToggleDnssec={handleToggleDnssec}
@@ -854,6 +857,12 @@ export default function App() {
         domain={certModalDomain}
         isOpen={!!certModalDomain}
         onClose={() => setCertModalDomain(null)}
+      />
+
+      <DomainReadinessModal
+        domain={readinessModalDomain}
+        isOpen={!!readinessModalDomain}
+        onClose={() => setReadinessModalDomain(null)}
       />
     </div>
   );
