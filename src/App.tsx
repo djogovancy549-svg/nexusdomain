@@ -13,6 +13,7 @@ import { SecurityCenterView } from './components/SecurityCenterView';
 import { ConfirmationModal } from './components/ConfirmationModal';
 import { DomainOwnershipCertificateModal } from './components/DomainOwnershipCertificateModal';
 import { DomainReadinessModal } from './components/DomainReadinessModal';
+import { CloudflareDeployModal } from './components/CloudflareDeployModal';
 
 import {
   DomainItem,
@@ -136,6 +137,7 @@ export default function App() {
   const [renewModalDomain, setRenewModalDomain] = useState<DomainItem | null>(null);
   const [certModalDomain, setCertModalDomain] = useState<DomainItem | null>(null);
   const [readinessModalDomain, setReadinessModalDomain] = useState<DomainItem | null>(null);
+  const [isCloudflareModalOpen, setIsCloudflareModalOpen] = useState(false);
 
   // Security scan state
   const [isScanning, setIsScanning] = useState(false);
@@ -700,6 +702,7 @@ export default function App() {
         onLogout={handleLogout}
         onOpenRegisterModal={() => setIsRegisterModalOpen(true)}
         onOpenSheetsModal={() => setIsSheetsModalOpen(true)}
+        onOpenCloudflareModal={() => setIsCloudflareModalOpen(true)}
         isLoggingIn={isLoggingIn}
         expiringCount={expiringCount}
       />
@@ -761,7 +764,7 @@ export default function App() {
       <footer className="border-t border-slate-900 bg-slate-950 py-8 px-4 text-center text-xs text-slate-500">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="font-extrabold text-white">NexaHost Indonesia</span>
+            <span className="font-extrabold text-white">EbiDomain (CV Ebi)</span>
             <span>• Penyedia Layanan Domain &amp; Cloud Web Hosting Berkeamanan Tinggi</span>
           </div>
           <div className="flex items-center gap-4 text-slate-400">
@@ -863,6 +866,11 @@ export default function App() {
         domain={readinessModalDomain}
         isOpen={!!readinessModalDomain}
         onClose={() => setReadinessModalDomain(null)}
+      />
+
+      <CloudflareDeployModal
+        isOpen={isCloudflareModalOpen}
+        onClose={() => setIsCloudflareModalOpen(false)}
       />
     </div>
   );

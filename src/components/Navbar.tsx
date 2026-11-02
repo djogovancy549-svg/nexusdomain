@@ -9,6 +9,7 @@ import {
   RefreshCw,
   LogOut,
   ExternalLink,
+  Cloud,
 } from 'lucide-react';
 import { User } from 'firebase/auth';
 import { GoogleSheetsConfig } from '../types';
@@ -27,6 +28,7 @@ interface NavbarProps {
   onLogout: () => void;
   onOpenRegisterModal: () => void;
   onOpenSheetsModal: () => void;
+  onOpenCloudflareModal: () => void;
   isLoggingIn: boolean;
   expiringCount: number;
 }
@@ -43,6 +45,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onLogout,
   onOpenRegisterModal,
   onOpenSheetsModal,
+  onOpenCloudflareModal,
   isLoggingIn,
   expiringCount,
 }) => {
@@ -56,22 +59,22 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => setActiveTab('domains')}
               className="flex items-center gap-3 cursor-pointer group"
             >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 p-0.5 shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 via-indigo-500 to-cyan-400 p-0.5 shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform">
                 <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-                  <ShieldCheck className="w-6 h-6 text-indigo-400" />
+                  <ShieldCheck className="w-6 h-6 text-amber-400" />
                 </div>
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xl font-extrabold tracking-tight text-white group-hover:text-indigo-300 transition-colors">
-                    Nexa<span className="text-indigo-400">Host</span>
+                  <span className="text-xl font-extrabold tracking-tight text-white group-hover:text-amber-300 transition-colors">
+                    Ebi<span className="text-amber-400">Domain</span>
                   </span>
-                  <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                    Tier 4 DC
+                  <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20">
+                    CV EBI
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-400 hidden sm:block">
-                  Penyedia Domain &amp; Cloud Hosting Berkeamanan Tinggi
+                <p className="text-[11px] text-slate-400 hidden sm:block font-mono">
+                  ebidomain.cvebi.workers.dev
                 </p>
               </div>
             </div>
@@ -156,6 +159,16 @@ export const Navbar: React.FC<NavbarProps> = ({
               {(sheetsConfig.isSyncing || webhookConfig?.isSendingWebhook) && (
                 <RefreshCw className="w-3.5 h-3.5 animate-spin text-emerald-400" />
               )}
+            </button>
+
+            {/* Cloudflare Deploy Button */}
+            <button
+              onClick={onOpenCloudflareModal}
+              title="Panduan Deploy ke Cloudflare (ebidomain.cvebi.workers.dev)"
+              className="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500/10 text-amber-300 border border-amber-500/30 flex items-center gap-1.5 hover:bg-amber-500/20 transition cursor-pointer"
+            >
+              <Cloud className="w-3.5 h-3.5 text-amber-400" />
+              <span className="hidden xl:inline">Cloudflare Deploy</span>
             </button>
 
             {/* Currency Selector */}
