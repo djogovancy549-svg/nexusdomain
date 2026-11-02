@@ -224,7 +224,7 @@ export const DomainSearchHero: React.FC<DomainSearchHeroProps> = ({
                   </span>
                 </div>
                 <p className="text-xs text-slate-300 mt-1">
-                  Domain resmi Indonesia (.id) • Siap langsung dihubungkan ke Cloudflare Pages <strong className="text-amber-300 font-mono">adminsipermas.pages.dev</strong> dengan proteksi DNSSEC &amp; SSL gratis seumur hidup.
+                  Domain resmi Indonesia (.id) • Siap langsung dihubungkan ke Cloudflare Pages <strong className="text-amber-300 font-mono">contoh-projek.pages.dev</strong> dengan proteksi DNSSEC &amp; SSL gratis seumur hidup.
                 </p>
                 <div className="mt-2 text-xs font-mono text-amber-300 font-bold">
                   Rp 12.000 <span className="text-slate-400 line-through text-[11px] font-normal">Rp 45.000</span> / tahun pertama

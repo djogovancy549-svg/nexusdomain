@@ -23,7 +23,7 @@ export const INITIAL_DOMAINS: DomainItem[] = [
     nameservers: ['ns1.cloudflare.com', 'ns2.cloudflare.com'],
     dnsRecords: [
       { id: 'rec-1', type: 'A', name: '@', value: '104.21.74.12', ttl: 3600 },
-      { id: 'rec-2', type: 'CNAME', name: 'www', value: 'adminsipermas.pages.dev', ttl: 3600 },
+      { id: 'rec-2', type: 'CNAME', name: 'www', value: 'contoh-projek.pages.dev', ttl: 3600 },
       { id: 'rec-3', type: 'TXT', name: '@', value: 'v=spf1 include:_spf.google.com ~all', ttl: 3600 }
     ],
     diskUsageMB: 1240,
@@ -45,7 +45,7 @@ export const INITIAL_SECURITY_LOGS: SecurityLog[] = [
     id: 'SEC-1001',
     timestamp: '2025-01-01 10:00:00',
     domain: 'sipermas.com',
-    event: 'Domain berhasil didaftarkan dan dihubungkan ke Cloudflare Pages (adminsipermas.pages.dev)',
+    event: 'Domain berhasil didaftarkan dan dihubungkan ke Cloudflare Pages (contoh-projek.pages.dev)',
     ip: '103.147.154.21 (NexaHost Engine)',
     severity: 'info',
     status: 'Enforced',

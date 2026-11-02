@@ -39,9 +39,7 @@ export const DnsManagerModal: React.FC<DnsManagerModalProps> = ({
   );
 
   // Cloudflare Pages Quick Preset State
-  const defaultCfTarget = domain.name.includes('sipermas')
-    ? 'adminsipermas.pages.dev'
-    : `${domain.name.split('.')[0]}.pages.dev`;
+  const defaultCfTarget = `${domain.name.split('.')[0]}.pages.dev`;
   const [cfPagesTarget, setCfPagesTarget] = useState(defaultCfTarget);
   const [showCfPreset, setShowCfPreset] = useState(false);
   const [cfAppliedMsg, setCfAppliedMsg] = useState(false);
@@ -276,7 +274,7 @@ export const DnsManagerModal: React.FC<DnsManagerModalProps> = ({
                     </span>
                   </h4>
                   <p className="text-[11px] text-slate-400">
-                    Arahkan domain ini ({domain.name}) ke aplikasi Cloudflare Pages seperti <strong className="text-amber-300">adminsipermas.pages.dev</strong>
+                    Arahkan domain ini ({domain.name}) ke aplikasi Cloudflare Pages seperti <strong className="text-amber-300">contoh-projek.pages.dev</strong>
                   </p>
                 </div>
               </div>
@@ -301,7 +299,7 @@ export const DnsManagerModal: React.FC<DnsManagerModalProps> = ({
                       type="text"
                       value={cfPagesTarget}
                       onChange={(e) => setCfPagesTarget(e.target.value)}
-                      placeholder="adminsipermas.pages.dev"
+                      placeholder="contoh-projek.pages.dev"
                       className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-mono focus:outline-none focus:border-amber-400"
                     />
                   </div>
@@ -317,8 +315,8 @@ export const DnsManagerModal: React.FC<DnsManagerModalProps> = ({
 
                 <div className="text-[11px] text-slate-400 bg-slate-900/80 p-2.5 rounded-xl border border-slate-800/80">
                   <strong className="text-slate-200 block mb-0.5">Yang akan dikonfigurasi:</strong>
-                  • <code>CNAME @ &rarr; {cfPagesTarget || 'adminsipermas.pages.dev'}</code> (Apex root domain)<br />
-                  • <code>CNAME www &rarr; {cfPagesTarget || 'adminsipermas.pages.dev'}</code> (Subdomain www)<br />
+                  • <code>CNAME @ &rarr; {cfPagesTarget || 'contoh-projek.pages.dev'}</code> (Apex root domain)<br />
+                  • <code>CNAME www &rarr; {cfPagesTarget || 'contoh-projek.pages.dev'}</code> (Subdomain www)<br />
                   • Menghapus record IP default (A record) yang bentrok secara otomatis.
                 </div>
               </div>

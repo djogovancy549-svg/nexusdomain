@@ -31,10 +31,7 @@ export const CloudflarePagesConnectModal: React.FC<CloudflarePagesConnectModalPr
 }) => {
   if (!isOpen || !domain) return null;
 
-  // Default target Pages URL based on domain name or user's example
-  const defaultTarget = domain.name.includes('sipermas')
-    ? 'adminsipermas.pages.dev'
-    : `${domain.name.split('.')[0]}.pages.dev`;
+  const defaultTarget = `${domain.name.split('.')[0]}.pages.dev`;
 
   const [targetPagesUrl, setTargetPagesUrl] = useState(defaultTarget);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
@@ -130,7 +127,7 @@ export const CloudflarePagesConnectModal: React.FC<CloudflarePagesConnectModalPr
                   type="text"
                   value={targetPagesUrl}
                   onChange={(e) => setTargetPagesUrl(e.target.value)}
-                  placeholder="contoh: adminsipermas.pages.dev"
+                  placeholder="contoh: contoh-projek.pages.dev"
                   className="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white font-mono placeholder-slate-500 focus:outline-none focus:border-indigo-500"
                 />
               </div>
@@ -193,11 +190,11 @@ export const CloudflarePagesConnectModal: React.FC<CloudflarePagesConnectModalPr
                     <td className="px-3.5 py-2.5 font-bold text-white">
                       @ <span className="text-slate-500 font-normal">({domain.name})</span>
                     </td>
-                    <td className="px-3.5 py-2.5 text-indigo-300 font-bold">{cleanTarget || 'adminsipermas.pages.dev'}</td>
+                    <td className="px-3.5 py-2.5 text-indigo-300 font-bold">{cleanTarget || 'contoh-projek.pages.dev'}</td>
                     <td className="px-3.5 py-2.5 text-right font-sans">
                       <button
                         type="button"
-                        onClick={() => handleCopy(cleanTarget || 'adminsipermas.pages.dev', 'cname-root')}
+                        onClick={() => handleCopy(cleanTarget || 'contoh-projek.pages.dev', 'cname-root')}
                         className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-medium transition cursor-pointer inline-flex items-center gap-1"
                       >
                         {copiedKey === 'cname-root' ? (
@@ -225,11 +222,11 @@ export const CloudflarePagesConnectModal: React.FC<CloudflarePagesConnectModalPr
                     <td className="px-3.5 py-2.5 font-bold text-white">
                       www <span className="text-slate-500 font-normal">(www.{domain.name})</span>
                     </td>
-                    <td className="px-3.5 py-2.5 text-indigo-300 font-bold">{cleanTarget || 'adminsipermas.pages.dev'}</td>
+                    <td className="px-3.5 py-2.5 text-indigo-300 font-bold">{cleanTarget || 'contoh-projek.pages.dev'}</td>
                     <td className="px-3.5 py-2.5 text-right font-sans">
                       <button
                         type="button"
-                        onClick={() => handleCopy(cleanTarget || 'adminsipermas.pages.dev', 'cname-www')}
+                        onClick={() => handleCopy(cleanTarget || 'contoh-projek.pages.dev', 'cname-www')}
                         className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-medium transition cursor-pointer inline-flex items-center gap-1"
                       >
                         {copiedKey === 'cname-www' ? (
@@ -288,7 +285,7 @@ export const CloudflarePagesConnectModal: React.FC<CloudflarePagesConnectModalPr
                 </div>
                 <div className="flex-1">
                   <strong className="text-white block font-semibold">
-                    Pilih Project Pages: "{cleanTarget.split('.')[0] || 'adminsipermas'}"
+                    Pilih Project Pages: "{cleanTarget.split('.')[0] || 'contoh-projek'}"
                   </strong>
                   <p className="text-slate-400 text-[11px] mt-0.5">
                     Klik nama project Pages Anda yang memuat aplikasi <strong>{cleanTarget}</strong>.
