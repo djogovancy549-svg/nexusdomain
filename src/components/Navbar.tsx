@@ -74,14 +74,14 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div>
                 <div className="flex items-center gap-2">
                   <span className="text-xl font-extrabold tracking-tight text-white group-hover:text-amber-300 transition-colors">
-                    Ebi<span className="text-amber-400">Domain</span>
+                    Nage<span className="text-amber-400">Domain</span>
                   </span>
                   <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20">
-                    CV EBI
+                    NAGEDOMAIN
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-400 hidden sm:block font-mono">
-                  ebidomain.cvebi.workers.dev
+                  nagedomain.com
                 </p>
               </div>
             </div>

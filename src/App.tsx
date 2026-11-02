@@ -185,14 +185,14 @@ export default function App() {
   // Right-click & DevTools Security Protection State
   const [isRightClickSecurityOpen, setIsRightClickSecurityOpen] = useState(false);
   const [securityModalReason, setSecurityModalReason] = useState<string>(
-    'Klik kanan & inspeksi elemen dinonaktifkan demi perlindungan hak cipta data pelanggan, struktur DNS, dan transaksi CV. EBI.'
+    'Klik kanan & inspeksi elemen dinonaktifkan demi perlindungan hak cipta data pelanggan, struktur DNS, dan transaksi NageDomain.'
   );
 
   useEffect(() => {
     const handleContextMenu = (e: MouseEvent) => {
       e.preventDefault();
       setSecurityModalReason(
-        'Klik kanan dinonaktifkan demi keamanan transaksi, perlindungan struktur DNS, dan hak cipta data pelanggan CV. EBI.'
+        'Klik kanan dinonaktifkan demi keamanan transaksi, perlindungan struktur DNS, dan hak cipta data pelanggan NageDomain.'
       );
       setIsRightClickSecurityOpen(true);
     };
@@ -206,7 +206,7 @@ export default function App() {
       ) {
         e.preventDefault();
         setSecurityModalReason(
-          'Akses DevTools dan Inspect Element dibatasi oleh AI Security Shield CV. EBI demi keamanan portal.'
+          'Akses DevTools dan Inspect Element dibatasi oleh AI Security Shield NageDomain demi keamanan portal.'
         );
         setIsRightClickSecurityOpen(true);
       }
@@ -433,7 +433,7 @@ export default function App() {
       timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19),
       domain: domainName,
       event,
-      ip: '103.147.154.21 (NexaHost Engine)',
+      ip: '103.147.154.21 (NageDomain Engine)',
       severity,
       status: 'Enforced',
     };
@@ -1020,14 +1020,14 @@ export default function App() {
       <footer className="border-t border-slate-900 bg-slate-950 py-8 px-4 text-center text-xs text-slate-500">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="font-extrabold text-white">EbiDomain (CV Ebi)</span>
+            <span className="font-extrabold text-white">NageDomain</span>
             <span>• Penyedia Layanan Domain &amp; Cloud Web Hosting Berkeamanan Tinggi</span>
           </div>
           <div className="flex items-center gap-4 text-slate-400">
             <span>Kontak HP: {ADMIN_PHONE}</span>
             <span>•</span>
             <a
-              href={`mailto:${ADMIN_EMAIL}?subject=Tanya%20Admin%20CV%20EBI`}
+              href={`mailto:${ADMIN_EMAIL}?subject=Tanya%20Admin%20NageDomain`}
               className="hover:text-indigo-300 transition cursor-pointer font-semibold text-slate-300"
             >
               Hubungi Email Admin

@@ -61,7 +61,7 @@ export const AdBanner: React.FC<AdBannerProps> = ({ onRegisterClick }) => {
             <Sparkles className="w-4 h-4 animate-spin-slow" />
           </div>
           <h3 className="text-sm font-bold tracking-wider text-slate-200 uppercase">
-            Penawaran Eksklusif &amp; Promo Hostinger-Class CV. EBI
+            Penawaran Eksklusif &amp; Promo Hostinger-Class NageDomain
           </h3>
         </div>
         <div className="flex items-center gap-1.5 text-xs text-amber-400 font-mono bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20 shadow-sm">
@@ -139,7 +139,7 @@ export const AdBanner: React.FC<AdBannerProps> = ({ onRegisterClick }) => {
             </button>
 
             <a
-              href={`https://wa.me/62${ADMIN_PHONE.replace(/^0/, '')}?text=Halo%20Admin%20CV.%20EBI,%20saya%20tertarik%20dengan%20promo%20${encodeURIComponent(promos[activeSlide].title)}`}
+              href={`https://wa.me/62${ADMIN_PHONE.replace(/^0/, '')}?text=Halo%20Admin%20NageDomain,%20saya%20tertarik%20dengan%20promo%20${encodeURIComponent(promos[activeSlide].title)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-3 text-xs text-slate-300 hover:text-amber-400 transition underline flex items-center gap-1 font-semibold"

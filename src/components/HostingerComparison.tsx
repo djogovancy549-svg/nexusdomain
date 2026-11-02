@@ -53,7 +53,7 @@ export const HostingerComparison: React.FC = () => {
       <div className="relative mb-10 rounded-2xl overflow-hidden border border-slate-800/80 shadow-2xl h-48 md:h-64 flex items-center p-6 md:p-8">
         <img
           src={cloudBannerImg}
-          alt="CV. EBI Datacenter"
+          alt="NageDomain Datacenter"
           className="absolute inset-0 w-full h-full object-cover object-center filter brightness-75 contrast-110"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent" />
@@ -66,7 +66,7 @@ export const HostingerComparison: React.FC = () => {
             Performa Hostinger-Class dengan Latency Lokal IIX Indonesia
           </h2>
           <p className="text-xs md:text-sm text-slate-300 font-medium">
-            Infrastruktur Cloud NVMe berkecepatan tinggi dengan jaminan uptime 99.9% dan pengelolaan transparan untuk seluruh pelanggan CV. EBI.
+            Infrastruktur Cloud NVMe berkecepatan tinggi dengan jaminan uptime 99.9% dan pengelolaan transparan untuk seluruh pelanggan NageDomain.
           </p>
         </div>
       </div>
@@ -74,10 +74,10 @@ export const HostingerComparison: React.FC = () => {
       {/* Title Header */}
       <div className="text-center max-w-3xl mx-auto mb-10 space-y-3">
         <h3 className="text-xl md:text-2xl font-extrabold text-white tracking-tight">
-          Perbandingan Layanan: <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-300 to-emerald-400">CV. EBI Domain</span> vs Provider Global (Hostinger)
+          Perbandingan Layanan: <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-300 to-emerald-400">NageDomain</span> vs Provider Global (Hostinger)
         </h3>
         <p className="text-sm text-slate-300 leading-relaxed">
-          Ketahui mengapa ribuan pelanggan bisnis dan pengembang lokal memilih infrastruktur CV. EBI untuk performa domain dan hosting terbaik di Indonesia.
+          Ketahui mengapa ribuan pelanggan bisnis dan pengembang lokal memilih infrastruktur NageDomain untuk performa domain dan hosting terbaik di Indonesia.
         </p>
       </div>
 
@@ -124,7 +124,7 @@ export const HostingerComparison: React.FC = () => {
               </th>
               <th className="p-4 md:p-5 text-xs font-bold text-emerald-400 uppercase tracking-wider bg-emerald-950/30 border-x border-emerald-900/50">
                 <span className="flex items-center gap-1.5">
-                  <Shield className="w-4 h-4 text-emerald-400" /> CV. EBI Domain Hub
+                  <Shield className="w-4 h-4 text-emerald-400" /> NageDomain Hub
                 </span>
               </th>
               <th className="p-4 md:p-5 text-xs font-bold text-slate-400 uppercase tracking-wider">
@@ -155,12 +155,12 @@ export const HostingerComparison: React.FC = () => {
       {/* Bottom CTA Callout */}
       <div className="mt-8 pt-6 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
         <div className="text-xs text-slate-400">
-          <p className="font-semibold text-slate-200">Ingin memindahkan domain dari Hostinger ke CV. EBI?</p>
+          <p className="font-semibold text-slate-200">Ingin memindahkan domain dari Hostinger ke NageDomain?</p>
           <p>Dapatkan gratis sisa masa aktif domain + gratis EPP/Auth code transfer assistance.</p>
         </div>
 
         <a
-          href={`https://wa.me/62${ADMIN_PHONE.replace(/^0/, '')}?text=Halo%20Admin%20CV.%20EBI,%20saya%20ingin%20migrasi%20domain/hosting%20dari%20provider%20lain.`}
+          href={`https://wa.me/62${ADMIN_PHONE.replace(/^0/, '')}?text=Halo%20Admin%20NageDomain,%20saya%20ingin%20migrasi%20domain/hosting%20dari%20provider%20lain.`}
           target="_blank"
           rel="noopener noreferrer"
           className="py-2.5 px-5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs rounded-xl shadow-lg transition duration-200 flex items-center gap-2"

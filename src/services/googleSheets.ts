@@ -1,6 +1,6 @@
 import { DomainItem, SecurityLog } from '../types';
 
-export const SHEET_TITLE_PREFIX = 'NexaHost - Database Hosting & Domain (Batas Waktu)';
+export const SHEET_TITLE_PREFIX = 'NageDomain - Database Hosting & Domain (Batas Waktu)';
 
 /**
  * Calculate remaining days until expiration date
@@ -46,11 +46,11 @@ export const getExpirationStatusLabel = (expirationDateStr: string): {
 };
 
 /**
- * Search Google Drive for existing NexaHost spreadsheet to prevent duplicates
+ * Search Google Drive for existing NageDomain spreadsheet to prevent duplicates
  */
 export const searchExistingSpreadsheet = async (accessToken: string): Promise<{ id: string; name: string; url: string } | null> => {
   try {
-    const q = encodeURIComponent("name contains 'NexaHost' and mimeType = 'application/vnd.google-apps.spreadsheet' and trashed = false");
+    const q = encodeURIComponent("name contains 'NageDomain' and mimeType = 'application/vnd.google-apps.spreadsheet' and trashed = false");
     const res = await fetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name,webViewLink)&pageSize=5`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,

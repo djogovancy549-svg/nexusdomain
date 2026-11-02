@@ -64,7 +64,7 @@ export const PaymentInvoiceModal: React.FC<PaymentInvoiceModalProps> = ({
   // WhatsApp confirmation
   const handleSendWhatsappConfirmation = () => {
     const text = encodeURIComponent(
-      `Halo Admin CV EBI (${ADMIN_PHONE}),\n\nSaya telah melakukan pembayaran transfer bank untuk pesanan domain:\n🌐 *Domain*: ${domain.name}\n📄 *No. Faktur*: ${domain.invoiceNumber}\n💰 *Total*: Rp ${(domain.salePriceIDR || 149000).toLocaleString('id-ID')}\n\n💳 *Rekening Tujuan*: BRI ${bankAccount.accountNumber} a.n. ${bankAccount.accountHolder}\n👤 *Nama Pemesan*: ${domain.clientName} (${domain.clientEmail})\n\nBerikut bukti transfer pembayaran saya. Mohon verifikasi dan aktifkan domain. Terima kasih!`
+      `Halo Admin NageDomain (${ADMIN_PHONE}),\n\nSaya telah melakukan pembayaran transfer bank untuk pesanan domain:\n🌐 *Domain*: ${domain.name}\n📄 *No. Faktur*: ${domain.invoiceNumber}\n💰 *Total*: Rp ${(domain.salePriceIDR || 149000).toLocaleString('id-ID')}\n\n💳 *Rekening Tujuan*: BRI ${bankAccount.accountNumber} a.n. ${bankAccount.accountHolder}\n👤 *Nama Pemesan*: ${domain.clientName} (${domain.clientEmail})\n\nBerikut bukti transfer pembayaran saya. Mohon verifikasi dan aktifkan domain. Terima kasih!`
     );
     window.open(`https://wa.me/${ADMIN_PHONE_WA}?text=${text}`, '_blank');
   };
@@ -73,7 +73,7 @@ export const PaymentInvoiceModal: React.FC<PaymentInvoiceModalProps> = ({
   const handleSendEmailConfirmation = () => {
     const subject = encodeURIComponent(`[KONFIRMASI PEMBAYARAN] Domain ${domain.name} - ${domain.invoiceNumber}`);
     const body = encodeURIComponent(
-      `Halo Admin CV EBI,\n\nSaya telah melakukan transfer ke rekening Bank BRI:\n\n` +
+      `Halo Admin NageDomain,\n\nSaya telah melakukan transfer ke rekening Bank BRI:\n\n` +
       `• Domain: ${domain.name}\n` +
       `• No Faktur: ${domain.invoiceNumber}\n` +
       `• Jumlah Transfer: Rp ${(domain.salePriceIDR || 149000).toLocaleString('id-ID')}\n` +

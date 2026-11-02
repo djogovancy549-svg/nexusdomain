@@ -78,7 +78,7 @@ export const DomainOwnershipCertificateModal: React.FC<DomainOwnershipCertificat
             {/* Header Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-bold uppercase tracking-widest print:text-indigo-900">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>NexaHost Accredited Domain Registrar</span>
+              <span>NageDomain Accredited Domain Registrar</span>
             </div>
 
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight uppercase font-serif print:text-black">
@@ -157,7 +157,7 @@ export const DomainOwnershipCertificateModal: React.FC<DomainOwnershipCertificat
               </div>
               <div className="text-right">
                 <div className="inline-block border-b border-slate-700 pb-1 text-center min-w-[140px] print:border-slate-400">
-                  <span className="text-xs font-bold text-white print:text-black">NexaHost Registry Authority</span>
+                  <span className="text-xs font-bold text-white print:text-black">NageDomain Registry Authority</span>
                 </div>
                 <p className="text-[10px] text-slate-400 mt-1 print:text-slate-600">Digital Cryptographic Seal</p>
               </div>

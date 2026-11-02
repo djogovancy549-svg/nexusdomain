@@ -39,14 +39,14 @@ export const TermsBanner: React.FC = () => {
               </div>
               <div className="text-sm text-slate-300">
                 <p className="font-semibold text-white flex items-center gap-2">
-                  Syarat, Ketentuan & Kebijakan Data CV. EBI Domain Hub
+                  Syarat, Ketentuan &amp; Kebijakan Data NageDomain
                   <span className="px-2 py-0.5 text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-md font-mono">
                     Official Policy 2026
                   </span>
                 </p>
                 <p className="text-slate-400 text-xs mt-0.5">
                   Dengan menggunakan platform ini, Anda menyetujui ketentuan pendaftaran domain, privasi data pelanggan, 
-                  metode konfirmasi pembayaran bank BRI, dan sistem keamanan anti-exploit CV. EBI.
+                  metode konfirmasi pembayaran bank BRI, dan sistem keamanan anti-exploit NageDomain.
                 </p>
               </div>
             </div>
@@ -62,7 +62,7 @@ export const TermsBanner: React.FC = () => {
                 onClick={handleAccept}
                 className="flex-1 md:flex-none py-2 px-4 text-xs font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-lg shadow-md transition flex items-center justify-center gap-1.5"
               >
-                <CheckCircle className="w-4 h-4" /> Setuju & Lanjutkan
+                <CheckCircle className="w-4 h-4" /> Setuju &amp; Lanjutkan
               </button>
             </div>
           </div>
@@ -78,7 +78,7 @@ export const TermsBanner: React.FC = () => {
               <div className="flex items-center gap-2.5">
                 <Shield className="w-6 h-6 text-blue-400" />
                 <h2 className="text-lg font-bold text-white">
-                  Syarat & Ketentuan Layanan CV. EBI
+                  Syarat &amp; Ketentuan Layanan NageDomain
                 </h2>
               </div>
               <button
@@ -93,17 +93,17 @@ export const TermsBanner: React.FC = () => {
             <div className="p-6 overflow-y-auto space-y-5 text-sm text-slate-300 leading-relaxed">
               <section className="space-y-2">
                 <h3 className="font-semibold text-white text-base flex items-center gap-2 border-b border-slate-800 pb-1.5">
-                  1. Ketentuan Pendaftaran Domain & Registrasi
+                  1. Ketentuan Pendaftaran Domain &amp; Registrasi
                 </h3>
                 <p>
-                  Seluruh domain yang didaftarkan melalui CV. EBI (.id, .com, .net, .co.id, dll.) resmi terverifikasi dan berhak mendapatkan fasilitas 
+                  Seluruh domain yang didaftarkan melalui NageDomain (.id, .com, .net, .co.id, dll.) resmi terverifikasi dan berhak mendapatkan fasilitas 
                   Manajemen DNS, DNSSEC gratis, dan perlindungan privasi WHOIS tanpa biaya tersembunyi.
                 </p>
               </section>
 
               <section className="space-y-2">
                 <h3 className="font-semibold text-white text-base flex items-center gap-2 border-b border-slate-800 pb-1.5">
-                  2. Metode Pembayaran & Konfirmasi Portal Admin
+                  2. Metode Pembayaran &amp; Konfirmasi Portal Admin
                 </h3>
                 <p>
                   Setiap pemesanan domain/hosting wajib diselesaikan melalui transfer ke rekening resmi Bank BRI atas nama 
@@ -114,21 +114,21 @@ export const TermsBanner: React.FC = () => {
 
               <section className="space-y-2">
                 <h3 className="font-semibold text-white text-base flex items-center gap-2 border-b border-slate-800 pb-1.5">
-                  3. Keamanan Data & Privasi Pelanggan
+                  3. Keamanan Data &amp; Privasi Pelanggan
                 </h3>
                 <p>
-                  Database dan struktur data pelanggan dilindungi oleh firewall enkripsi CV. EBI. Akses kunci backend (seperti Google Sheets master 
+                  Database dan struktur data pelanggan dilindungi oleh firewall enkripsi NageDomain. Akses kunci backend (seperti Google Sheets master 
                   dan DNS Zone File) strictly tersimpan di sisi server Admin dan tidak diekspos ke publik demi keamanan infrastruktur domain.
                 </p>
               </section>
 
               <section className="space-y-2">
                 <h3 className="font-semibold text-white text-base flex items-center gap-2 border-b border-slate-800 pb-1.5">
-                  4. Larangan Tindakan Hacking & Injeksi Malware
+                  4. Larangan Tindakan Hacking &amp; Injeksi Malware
                 </h3>
                 <p>
                   Dilarang keras melakukan manipulasi payload (SQL Injection, XSS, Script Ingestion, scraping unauthorized). 
-                  Sistem keamanan CV. EBI secara otomatis mencatat dan memblokir IP address yang mencoba melakukan exploitasi.
+                  Sistem keamanan NageDomain secara otomatis mencatat dan memblokir IP address yang mencoba melakukan exploitasi.
                 </p>
               </section>
             </div>
@@ -136,7 +136,7 @@ export const TermsBanner: React.FC = () => {
             {/* Footer Actions */}
             <div className="p-4 bg-slate-950 border-t border-slate-800 flex items-center justify-between">
               <span className="text-xs text-slate-400">
-                Terakhir Diperbarui: Tahun 2026 — CV. EBI Domain & Cloud System
+                Terakhir Diperbarui: Tahun 2026 — NageDomain &amp; Cloud System
               </span>
               <button
                 onClick={() => {

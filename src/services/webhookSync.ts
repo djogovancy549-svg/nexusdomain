@@ -114,7 +114,7 @@ export const sendDataToSheetWebhook = async (
  */
 export const GOOGLE_APPS_SCRIPT_CODE = `/**
  * ========================================================
- * NEXAHOST - GOOGLE APPS SCRIPT WEBHOOK DEPLOY HANDLER
+ * NAGEDOMAIN - GOOGLE APPS SCRIPT WEBHOOK DEPLOY HANDLER
  * ========================================================
  * 1. Buka Google Spreadsheet baru di browser Anda.
  * 2. Klik menu 'Extensions' (Ekstensi) > 'Apps Script'.
@@ -124,7 +124,7 @@ export const GOOGLE_APPS_SCRIPT_CODE = `/**
  * 6. Set 'Execute as' = 'Me' (Saya).
  * 7. Set 'Who has access' = 'Anyone' (Siapa saja).
  * 8. Klik 'Deploy', izinkan akses (Authorize), lalu SALIN URL Web App (Webhook URL).
- * 9. Tempelkan URL tersebut ke kolom Webhook di aplikasi NexaHost!
+ * 9. Tempelkan URL tersebut ke kolom Webhook di aplikasi NageDomain!
  */
 
 function doPost(e) {
@@ -251,7 +251,7 @@ function doPost(e) {
 function doGet(e) {
   return ContentService.createTextOutput(JSON.stringify({
     status: "online",
-    message: "NexaHost Google Apps Script Webhook Deploy aktif dan siap menerima data domain!"
+    message: "NageDomain Google Apps Script Webhook Deploy aktif dan siap menerima data domain!"
   })).setMimeType(ContentService.MimeType.JSON);
 }
 `;

@@ -69,12 +69,12 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
   const dnssecCount = domains.filter((d) => d.dnssecEnabled).length;
 
   const handleGeneralWhatsapp = () => {
-    const text = encodeURIComponent(`Halo Admin CV EBI (${ADMIN_PHONE}), saya ingin bertanya tentang pendaftaran domain & hosting.`);
+    const text = encodeURIComponent(`Halo Admin NageDomain (${ADMIN_PHONE}), saya ingin bertanya tentang pendaftaran domain & hosting.`);
     window.open(`https://wa.me/${ADMIN_PHONE_WA}?text=${text}`, '_blank');
   };
 
   const handleGeneralEmail = () => {
-    window.open(`mailto:${ADMIN_EMAIL}?subject=Pertanyaan%20Layanan%20Domain%20CV%20EBI`, '_blank');
+    window.open(`mailto:${ADMIN_EMAIL}?subject=Pertanyaan%20Layanan%20Domain%20NageDomain`, '_blank');
   };
 
   return (
@@ -87,13 +87,13 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-semibold">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>EbiDomain Client Area • Portal Pelanggan Resmi</span>
+              <span>NageDomain Client Area • Portal Pelanggan Resmi</span>
             </div>
             <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
               Selamat Datang di Dashboard Pelanggan
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
-              Layanan managed domain &amp; cloud hosting profesional oleh Tim CV EBI. Transfer pembayaran ke Bank BRI resmi dan konfirmasi via HP (<strong className="text-emerald-400 font-mono">{ADMIN_PHONE}</strong>), Email Admin, atau langsung di Web Admin portal.
+              Layanan managed domain &amp; cloud hosting profesional oleh Tim NageDomain. Transfer pembayaran ke Bank BRI resmi dan konfirmasi via HP (<strong className="text-emerald-400 font-mono">{ADMIN_PHONE}</strong>), Email Admin, atau langsung di Web Admin portal.
             </p>
           </div>
 
@@ -123,19 +123,19 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
         </div>
       </div>
 
-      {/* Keunggulan CV EBI vs Hostinger Box */}
+      {/* Keunggulan NageDomain vs Hostinger Box */}
       <div className="p-5 rounded-2xl bg-gradient-to-r from-indigo-950/50 via-slate-900 to-indigo-950/50 border border-indigo-500/20 space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2 font-bold text-white text-sm">
             <ShieldCheck className="w-5 h-5 text-indigo-400 shrink-0" />
-            <span>Pemberitahuan Layanan Managed Domain CV EBI (Beda dengan Hostinger)</span>
+            <span>Pemberitahuan Layanan Managed Domain NageDomain (Beda dengan Hostinger)</span>
           </div>
           <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0 self-start sm:self-auto">
             AMAN &amp; TERJAMIN
           </span>
         </div>
         <p className="text-xs text-slate-300 leading-relaxed">
-          Di Hostinger, pelanggan dibebaskan mengatur DNS sendiri yang sering kali menyebabkan salah pengetikan dan website down. Di <strong>CV EBI</strong>, demi keamanan pelanggan, <strong>Tim Admin membantu mengonfigurasi DNS, Cloudflare, dan SSL secara gratis setelah pembayaran transfer BRI terverifikasi</strong>. Pelanggan dapat mengonfirmasi pembayaran lewat WA HP <strong>{ADMIN_PHONE}</strong>, tombol email admin, atau langsung di formulir web admin.
+          Di Hostinger, pelanggan dibebaskan mengatur DNS sendiri yang sering kali menyebabkan salah pengetikan dan website down. Di <strong>NageDomain</strong>, demi keamanan pelanggan, <strong>Tim Admin membantu mengonfigurasi DNS, Cloudflare, dan SSL secara gratis setelah pembayaran transfer BRI terverifikasi</strong>. Pelanggan dapat mengonfirmasi pembayaran lewat WA HP <strong>{ADMIN_PHONE}</strong>, tombol email admin, atau langsung di formulir web admin.
         </p>
       </div>
 
@@ -396,9 +396,9 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
       {activeSubTab === 'security' && (
         <div className="space-y-6">
           <div>
-            <h3 className="text-lg font-bold text-white">Standar Keamanan Managed CV EBI</h3>
+            <h3 className="text-lg font-bold text-white">Standar Keamanan Managed NageDomain</h3>
             <p className="text-xs text-slate-400 mt-1">
-              Setiap domain yang dikelola dilindungi dengan enkripsi berlapis dan proteksi data oleh Tim Admin CV EBI.
+              Setiap domain yang dikelola dilindungi dengan enkripsi berlapis dan proteksi data oleh Tim Admin NageDomain.
             </p>
           </div>
 
