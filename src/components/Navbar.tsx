@@ -33,6 +33,7 @@ interface NavbarProps {
   onOpenRegisterModal: () => void;
   onOpenSheetsModal: () => void;
   onOpenCloudflareModal: () => void;
+  onOpenBlueprintModal?: () => void;
   isLoggingIn: boolean;
   expiringCount: number;
 }
@@ -53,6 +54,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenRegisterModal,
   onOpenSheetsModal,
   onOpenCloudflareModal,
+  onOpenBlueprintModal,
   isLoggingIn,
   expiringCount,
 }) => {
@@ -178,6 +180,19 @@ export const Navbar: React.FC<NavbarProps> = ({
                 {(sheetsConfig.isSyncing || webhookConfig?.isSendingWebhook) && (
                   <RefreshCw className="w-3.5 h-3.5 animate-spin text-emerald-400" />
                 )}
+              </button>
+            )}
+
+            {/* Business Readiness & Go-Live Blueprint (Khusus Pemilik/Admin) */}
+            {isAdminView && onOpenBlueprintModal && (
+              <button
+                onClick={onOpenBlueprintModal}
+                className="px-3 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-sm shadow-amber-500/10"
+                title="Status Go-Live sipermas.com & Panduan Registrasi ResellerClub/ICANN"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span className="hidden sm:inline">Kesiapan Bisnis &amp; Go-Live</span>
+                <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping hidden sm:block"></span>
               </button>
             )}
 

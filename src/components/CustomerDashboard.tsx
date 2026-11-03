@@ -22,6 +22,7 @@ import {
   Mail,
   MessageSquare,
   Send,
+  ShieldAlert,
 } from 'lucide-react';
 import { User } from 'firebase/auth';
 import { DomainItem, TldPricing } from '../types';
@@ -39,6 +40,7 @@ interface CustomerDashboardProps {
   onOpenCertModal: (domain: DomainItem) => void;
   onOpenCfPagesModal: (domain: DomainItem) => void;
   onOpenInvoiceModal: (domain: DomainItem) => void;
+  onOpenDnsDiagnostic?: (domain: DomainItem) => void;
 }
 
 export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
@@ -53,6 +55,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
   onOpenCertModal,
   onOpenCfPagesModal,
   onOpenInvoiceModal,
+  onOpenDnsDiagnostic,
 }) => {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('annual');
   const [activeSubTab, setActiveSubTab] = useState<'domains' | 'billing' | 'security'>('domains');
@@ -416,6 +419,16 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
                     <Globe className="w-3.5 h-3.5 text-indigo-400" />
                     <span>Subdomain &amp; DNS</span>
                   </button>
+                  {onOpenDnsDiagnostic && (
+                    <button
+                      onClick={() => onOpenDnsDiagnostic(dom)}
+                      className="px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer animate-pulse"
+                      title="Mengapa domain belum aktif? Klik untuk live check DNS"
+                    >
+                      <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
+                      <span>Mengapa Belum Aktif?</span>
+                    </button>
+                  )}
                   <button
                     onClick={() => onOpenInvoiceModal(dom)}
                     className="px-3.5 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"

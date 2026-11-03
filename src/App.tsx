@@ -16,12 +16,14 @@ import { SecurityCenterView } from './components/SecurityCenterView';
 import { ConfirmationModal } from './components/ConfirmationModal';
 import { DomainOwnershipCertificateModal } from './components/DomainOwnershipCertificateModal';
 import { DomainReadinessModal } from './components/DomainReadinessModal';
+import { DnsDiagnosticModal } from './components/DnsDiagnosticModal';
 import { CloudflareDeployModal } from './components/CloudflareDeployModal';
 import { CloudflarePagesConnectModal } from './components/CloudflarePagesConnectModal';
 import { RightClickSecurityModal } from './components/RightClickSecurityModal';
 import { TermsBanner } from './components/TermsBanner';
 import { AdBanner } from './components/AdBanner';
 import { HostingerComparison } from './components/HostingerComparison';
+import { DomainBusinessBlueprintModal } from './components/DomainBusinessBlueprintModal';
 
 import {
   DomainItem,
@@ -169,9 +171,11 @@ export default function App() {
   const [renewModalDomain, setRenewModalDomain] = useState<DomainItem | null>(null);
   const [certModalDomain, setCertModalDomain] = useState<DomainItem | null>(null);
   const [readinessModalDomain, setReadinessModalDomain] = useState<DomainItem | null>(null);
+  const [dnsDiagnosticDomain, setDnsDiagnosticDomain] = useState<DomainItem | null>(null);
   const [isCloudflareModalOpen, setIsCloudflareModalOpen] = useState(false);
   const [cfPagesModalDomain, setCfPagesModalDomain] = useState<DomainItem | null>(null);
   const [invoiceModalDomain, setInvoiceModalDomain] = useState<DomainItem | null>(null);
+  const [isBlueprintModalOpen, setIsBlueprintModalOpen] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
   // Strictly enforce Admin view only if authenticated via Super Admin PIN or Super Admin Google Account
@@ -900,6 +904,7 @@ export default function App() {
         onOpenRegisterModal={() => setIsRegisterModalOpen(true)}
         onOpenSheetsModal={() => setIsSheetsModalOpen(true)}
         onOpenCloudflareModal={() => setIsCloudflareModalOpen(true)}
+        onOpenBlueprintModal={() => setIsBlueprintModalOpen(true)}
         isLoggingIn={isLoggingIn}
         expiringCount={expiringCount}
       />
@@ -920,6 +925,7 @@ export default function App() {
               onOpenCertModal={(d) => setCertModalDomain(d)}
               onOpenCfPagesModal={(d) => setCfPagesModalDomain(d)}
               onOpenInvoiceModal={(d) => setInvoiceModalDomain(d)}
+              onOpenDnsDiagnostic={(d) => setDnsDiagnosticDomain(d)}
             />
             
             {/* Promo Advertising Banner */}
@@ -949,6 +955,7 @@ export default function App() {
             onOpenCertificateModal={(d) => setCertModalDomain(d)}
             onOpenReadinessModal={(d) => setReadinessModalDomain(d)}
             onOpenCloudflarePagesModal={(d) => setCfPagesModalDomain(d)}
+            onOpenDnsDiagnostic={(d) => setDnsDiagnosticDomain(d)}
             onToggleAutoRenew={handleToggleAutoRenew}
             onToggleWhoisPrivacy={handleToggleWhoisPrivacy}
             onToggleDnssec={handleToggleDnssec}
@@ -1142,6 +1149,22 @@ export default function App() {
         domain={readinessModalDomain}
         isOpen={!!readinessModalDomain}
         onClose={() => setReadinessModalDomain(null)}
+      />
+
+      <DnsDiagnosticModal
+        domain={dnsDiagnosticDomain}
+        isOpen={Boolean(dnsDiagnosticDomain)}
+        onClose={() => setDnsDiagnosticDomain(null)}
+      />
+
+      <DomainBusinessBlueprintModal
+        isOpen={isBlueprintModalOpen}
+        onClose={() => setIsBlueprintModalOpen(false)}
+        onOpenDnsDiagnostic={() => {
+          setIsBlueprintModalOpen(false);
+          const target = domains.find((d) => d.name.toLowerCase().includes('sipermas.com')) || domains[0];
+          setDnsDiagnosticDomain(target);
+        }}
       />
 
       <CloudflareDeployModal

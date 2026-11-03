@@ -29,6 +29,7 @@ import {
   UserCheck,
   Mail,
   Send,
+  ShieldAlert,
 } from 'lucide-react';
 import { DomainItem, PaymentConfirmation } from '../types';
 import { calculateRemainingDays, getExpirationStatusLabel } from '../services/googleSheets';
@@ -47,6 +48,7 @@ interface DomainManagementTableProps {
   onOpenCertificateModal: (domain: DomainItem) => void;
   onOpenReadinessModal: (domain: DomainItem) => void;
   onOpenCloudflarePagesModal?: (domain: DomainItem) => void;
+  onOpenDnsDiagnostic?: (domain: DomainItem) => void;
   onToggleAutoRenew: (domainId: string) => void;
   onToggleWhoisPrivacy: (domainId: string) => void;
   onToggleDnssec: (domainId: string) => void;
@@ -69,6 +71,7 @@ export const DomainManagementTable: React.FC<DomainManagementTableProps> = ({
   onOpenCertificateModal,
   onOpenReadinessModal,
   onOpenCloudflarePagesModal,
+  onOpenDnsDiagnostic,
   onToggleAutoRenew,
   onToggleWhoisPrivacy,
   onToggleDnssec,
@@ -654,6 +657,18 @@ export const DomainManagementTable: React.FC<DomainManagementTableProps> = ({
                       <Wifi className="w-3.5 h-3.5 text-emerald-400" />
                       <span>Uji Web</span>
                     </button>
+
+                    {/* Live DNS Diagnostic */}
+                    {onOpenDnsDiagnostic && (
+                      <button
+                        onClick={() => onOpenDnsDiagnostic(domain)}
+                        title="Diagnosis mengapa domain belum aktif di internet (Live Root DNS Checker)"
+                        className="px-3 py-2 rounded-xl text-xs font-bold bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 transition flex items-center gap-1.5 cursor-pointer shadow-sm animate-pulse"
+                      >
+                        <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
+                        <span>Diagnosis DNS</span>
+                      </button>
+                    )}
 
                     {/* Renew Button */}
                     <button
