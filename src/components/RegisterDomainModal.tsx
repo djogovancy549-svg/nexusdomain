@@ -14,6 +14,7 @@ import {
   DollarSign,
   FileCheck,
 } from 'lucide-react';
+import { registerDomain } from '../services/resellerClubApi';
 import { HOSTING_PACKAGES, TLD_PRICING_CATALOG } from '../data/initialData';
 import { DomainItem } from '../types';
 
@@ -85,9 +86,20 @@ export const RegisterDomainModal: React.FC<RegisterDomainModalProps> = ({
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!cleanKeyword || !clientName || !clientEmail) return;
+
+    // Simulate domain registration via ResellerClub Sandbox
+    try {
+      // In a real scenario, we might need a customerId from the backend. 
+      // For now, we use a placeholder customer ID.
+      const result = await registerDomain(fullDomainName, 'test-customer-id');
+      console.log('Domain registration result:', result);
+    } catch (error) {
+      console.error('Failed to register domain:', error);
+      // We could add UI feedback here if registration fails
+    }
 
     const randomId = Math.floor(1000 + Math.random() * 9000);
     const invoiceNum = `INV-${new Date().getFullYear()}-${randomId}`;
