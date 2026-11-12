@@ -8,6 +8,7 @@ import {
   ShieldCheck,
   FileSpreadsheet,
 } from 'lucide-react';
+import { registerDomain } from '../services/resellerClubApi';
 import { DomainItem } from '../types';
 import { calculateRemainingDays } from '../services/googleSheets';
 
@@ -43,7 +44,16 @@ export const RenewDomainModal: React.FC<RenewDomainModalProps> = ({
 
   const totalPrice = currency === 'IDR' ? pricePerYearIDR * yearsToAdd : pricePerYearUSD * yearsToAdd;
 
-  const handleConfirmRenew = () => {
+  const handleConfirmRenew = async () => {
+    // Simulate domain renewal via ResellerClub Sandbox
+    try {
+      console.log(`Simulating domain renewal for ${domain.name}`);
+      const result = await registerDomain(domain.name, 'test-customer-id');
+      console.log('Domain renewal result:', result);
+    } catch (error) {
+      console.error('Failed to renew domain:', error);
+    }
+
     onRenewSuccess(domain.id, formattedNewExpiry, yearsToAdd);
     onClose();
   };
